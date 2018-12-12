@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "803179619735",
+    "firebase_url": "https://sst-house-point.firebaseio.com",
+    "project_id": "sst-house-point",
+    "storage_bucket": "sst-house-point.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803179619735:android:824c494cdfe8ffec",
+        "android_client_info": {
+          "package_name": "com.pointsrn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803179619735-si8u44e8a3uairu80o7gih1sgh9jub83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pointsrn",
+            "certificate_hash": "2b0acd002f107edb213b6f084aa26517b543866b"
+          }
+        },
+        {
+          "client_id": "803179619735-e3uv6mn7barc2837b50bajll3rvimscv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLofM_dsGBpOEA1MMjw1GeHCYbjW1XTTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803179619735-nnql6tuovg7l16a9gfo2hpac1gijuel9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "803179619735-nqdt8hukfn5u4091mks7chgmva18k020.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sebaschoo.housepoints"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
