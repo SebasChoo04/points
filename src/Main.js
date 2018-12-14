@@ -5,6 +5,7 @@ import HouseScreen from "./HouseScreen"
 import AnnouncementScreen from "./AnnouncementScreen"
 import RankingScreen from "./RankingScreen"
 import StepTrackerScreen from "./StepTrackerScreen"
+import Login from "./Login";
 
 const TabNavigator = createBottomTabNavigator({
     "Your House": {screen: HouseScreen},
@@ -14,7 +15,10 @@ const TabNavigator = createBottomTabNavigator({
 });
 
 const Main = createStackNavigator({
-    Tab: {screen: TabNavigator}
+  Login: {screen: Login},
+  Tab: {screen: TabNavigator},
+}, {
+    headerMode: 'none'
 })
 
-export default createAppContainer();
+export default createAppContainer(Main);

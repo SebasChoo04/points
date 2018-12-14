@@ -1,0 +1,28 @@
+import {redux} from "../Constants";
+
+export function changeEmail(email) {
+  return {
+    type: redux.USER_EMAIL,
+    email
+  }
+}
+
+export function changeName(name) {
+  return {
+    type: redux.USER_NAME,
+    name
+  }
+}
+
+export function changeLoginStatus(loginStatus) {
+  return {
+    type: redux.USER_LOGIN_STATUS,
+    loginStatus
+  }
+}
+
+export function resetAll() {
+  return {
+    type: redux.RESET_ALL
+  }
+}
