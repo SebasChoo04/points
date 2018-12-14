@@ -130,6 +130,8 @@ PODS:
   - Protobuf (3.6.1)
   - React (0.57.7):
     - React/Core (= 0.57.7)
+  - React/ART (0.57.7):
+    - React/Core
   - React/Core (0.57.7):
     - yoga (= 0.57.7.React)
   - React/CxxBridge (0.57.7):
@@ -180,6 +182,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - GoogleSignIn
+  - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -260,6 +263,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 6df1cead3e5da00345daadea6397306680bd109b
+PODFILE CHECKSUM: 328eebbb43569bd5aee8c22885f3dc49a990c001
 
 COCOAPODS: 1.5.3

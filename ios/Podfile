@@ -22,6 +22,7 @@ target 'PointsRN' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'ART',
     'Core',
     'CxxBridge', # Include this for RN >= 0.47
     'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43

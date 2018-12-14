@@ -8,6 +8,8 @@ import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google
 import {GoogleApiAvailabilityType} from "react-native-firebase";
 import {connect} from 'react-redux'
 import {changeEmail, changeName, changeLoginStatus, resetAll} from "./actions";
+import * as Progress from 'react-native-progress';
+import firebase from 'react-native-firebase'
 
 class Login extends Component {
   constructor(props) {
@@ -41,7 +43,46 @@ class Login extends Component {
   }
 
   getHouse() {
+    const ref = firebase.firestore().collection('users').doc(this.props.userDetailsReducer.email)
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(ref)
+      if (!doc.exists) {
+        transaction.set(ref, {house: 'uninitialized'})
+        alert('user is not in db')
+        return {house: 'uninitialized'}
+      }
+      transaction.update(ref, {house: doc.data().house})
+      if (doc.data().house == 'uninitialized') {
+        this.props.navigation.navigate('ChooseHouse')
+      } else {
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({routeName: 'Tab'})],
+        });
+        this.props.navigation.dispatch(resetAction);
+      }
+      return
+    })
+  }
 
+  renderLoginButton() {
+    if (this.state.signInLoading) {
+      return (
+          <Progress.CircleSnail color={['red', 'green', 'blue', 'yellow', 'black']} style={{
+            marginTop: 32
+          }}/>
+      )
+    }
+    return (
+        <GoogleSigninButton style={{
+          height: 48,
+          width: this.state.width - 32,
+          marginTop: 32
+        }} color={GoogleSigninButton.Color.Dark} onPress={() => {
+          this.setState({signInLoading: true})
+          this.initSignIn()
+        }}/>
+    )
   }
 
   async signIn() {
@@ -110,20 +151,24 @@ class Login extends Component {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Avenir Next',
-              margin: 16
+            <View style={{
+              flex: 1,
+              justifyContent: 'flex-end',
             }}>
-              To start your journey, please sign in with your SST Google Account
-            </Text>
-            <GoogleSigninButton style={{
-              height: 48,
-              width: this.state.width - 32,
-              marginTop: 32
-            }} color={GoogleSigninButton.Color.Dark} onPress={() => {
-              this.initSignIn()
-            }}/>
+              <Text style={{
+                fontSize: 20,
+                fontFamily: 'Avenir Next',
+                margin: 16
+              }}>
+                To start your journey, please sign in with your SST Google Account
+              </Text>
+            </View>
+            <View style={{
+              flex: 1,
+              justifyContent: 'flex-start',
+            }}>
+              {this.renderLoginButton()}
+            </View>
           </View>
         </View>
     )
