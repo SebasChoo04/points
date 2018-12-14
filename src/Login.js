@@ -7,9 +7,10 @@ import Svg, {
 import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google-signin";
 import {GoogleApiAvailabilityType} from "react-native-firebase";
 import {connect} from 'react-redux'
-import {changeEmail, changeName, changeLoginStatus, resetAll} from "./actions";
+import {changeEmail, changeName, changeLoginStatus, resetAll, changeHouse} from "./actions";
 import * as Progress from 'react-native-progress';
 import firebase from 'react-native-firebase'
+import {StackActions, NavigationActions} from 'react-navigation'
 
 class Login extends Component {
   constructor(props) {
@@ -30,11 +31,12 @@ class Login extends Component {
 
   initSignIn() {
     GoogleSignin.configure({
-      webClientId: '803179619735-si8u44e8a3uairu80o7gih1sgh9jub83.apps.googleusercontent.com',
+      webClientId: '803179619735-e3uv6mn7barc2837b50bajll3rvimscv.apps.googleusercontent.com',
       offlineAccess: true,
       forceConsentPrompt: true,
       iosClientId: '803179619735-nqdt8hukfn5u4091mks7chgmva18k020.apps.googleusercontent.com',
     });
+    GoogleSignin.signOut()
     this.signIn()
   }
 
@@ -48,13 +50,15 @@ class Login extends Component {
       const doc = await transaction.get(ref)
       if (!doc.exists) {
         transaction.set(ref, {house: 'uninitialized'})
-        alert('user is not in db')
+        this.props.navigation.navigate('ChooseHouse')
         return {house: 'uninitialized'}
       }
       transaction.update(ref, {house: doc.data().house})
       if (doc.data().house == 'uninitialized') {
         this.props.navigation.navigate('ChooseHouse')
       } else {
+        this.props.changeLoginStatus(true)
+        this.props.changeHouse(doc.data().house)
         const resetAction = StackActions.reset({
           index: 0,
           actions: [NavigationActions.navigate({routeName: 'Tab'})],
@@ -93,12 +97,14 @@ class Login extends Component {
       this.props.changeEmail(userInfo.user.email)
       this.getHouse()
     } catch (error) {
+      this.setState({signInLoading: false})
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         this.showError("User cancelled signin")
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         this.showError('Play services not available')
       } else {
         this.showError('An error occurred')
+        console.log(error)
       }
     }
   };
@@ -182,7 +188,8 @@ const mapDispatchToProps = (dispatch) => ({
   changeEmail: email => dispatch(changeEmail(email)),
   changeName: name => dispatch(changeName(name)),
   changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll())
+  resetAll: () => dispatch(resetAll()),
+  changeHouse: house => dispatch(changeHouse(house))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

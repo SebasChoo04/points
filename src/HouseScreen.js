@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Dimensions, SafeAreaView} from 'react-native'
+import {View, Text, Dimensions, SafeAreaView, TouchableOpacity} from 'react-native'
 import Svg, {
   Path,
   Rect
@@ -8,6 +8,7 @@ import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
+import {NavigationActions, StackActions} from "react-navigation";
 
 class HouseScreen extends Component {
   constructor(props) {
@@ -80,6 +81,18 @@ class HouseScreen extends Component {
           <View style={{
             flex: 2
           }}>
+            <TouchableOpacity onPress={() => {
+              this.props.resetAll()
+              const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({routeName: 'Splitter'})],
+              });
+              this.props.navigation.dispatch(resetAction);
+            }}>
+              <Text>
+                sign out
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
     )

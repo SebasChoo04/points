@@ -26,3 +26,10 @@ export function resetAll() {
     type: redux.RESET_ALL
   }
 }
+
+export function changeHouse(house) {
+  return {
+    type: redux.USER_HOUSE,
+    house
+  }
+}

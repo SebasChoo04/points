@@ -11,7 +11,7 @@ import Splitter from "./Splitter";
 
 const TabNavigator = createBottomTabNavigator({
   "Your House": {screen: HouseScreen},
-  "Settings": {screen: AnnouncementScreen},
+  "Announcements": {screen: AnnouncementScreen},
   "Ranking": {screen: RankingScreen},
   "Step Tracker": {screen: StepTrackerScreen}
 });

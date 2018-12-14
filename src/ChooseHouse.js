@@ -4,6 +4,9 @@ import {connect} from 'react-redux'
 import Svg from "react-native-svg";
 import Path from "react-native-svg/elements/Path";
 import LinearGradient from "react-native-linear-gradient";
+import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "./actions";
+import firebase from 'react-native-firebase'
+import {NavigationActions, StackActions} from "react-navigation";
 
 class ChooseHouse extends Component {
   constructor(props) {
@@ -18,6 +21,21 @@ class ChooseHouse extends Component {
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       this.setState({width, height});
+    })
+  }
+
+  setHouse(house) {
+    const ref = firebase.firestore().collection('users').doc(this.props.userDetailsReducer.email)
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(ref)
+      transaction.update(ref, {house: house})
+      this.props.changeLoginStatus(true)
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: 'Tab'})],
+      });
+      this.props.navigation.dispatch(resetAction);
+      return {house: house}
     })
   }
 
@@ -113,6 +131,8 @@ class ChooseHouse extends Component {
                     marginLeft: 16,
                     alignItems: 'center',
                     flexDirection: 'row',
+                  }} onPress={() => {
+                    this.setHouse(item.key)
                   }}>
                     <View style={{
                       flex: 1,
@@ -154,4 +174,12 @@ const mapStateToProps = (state) => {
   return state
 }
 
-export default connect(mapStateToProps)(ChooseHouse)
+const mapDispatchToProps = (dispatch) => ({
+  changeEmail: email => dispatch(changeEmail(email)),
+  changeName: name => dispatch(changeName(name)),
+  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
+  resetAll: () => dispatch(resetAll()),
+  changeHouse: house => dispatch(changeHouse(house))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseHouse)
