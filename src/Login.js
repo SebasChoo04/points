@@ -91,7 +91,6 @@ class Login extends Component {
       const userInfo = await GoogleSignin.signIn();
       this.props.changeName(userInfo.user.name)
       this.props.changeEmail(userInfo.user.email)
-      this.props.changeLoginStatus(true)
       this.getHouse()
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
