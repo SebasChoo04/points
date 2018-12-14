@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
 
 import HouseScreen from "./HouseScreen"
 import AnnouncementScreen from "./AnnouncementScreen"
@@ -13,4 +13,8 @@ const TabNavigator = createBottomTabNavigator({
     "Step Tracker": {screen: StepTrackerScreen}
 });
 
-export default createAppContainer(TabNavigator);
+const Main = createStackNavigator({
+    Tab: {screen: TabNavigator}
+})
+
+export default createAppContainer();
