@@ -73,6 +73,7 @@ class HouseScreen extends Component {
               <Stop stopColor="#6ABAD5" stopOpacity="1" offset="0%"/>
               <Stop stopColor="#1E9FD6" stopOpacity="1" offset="100%"/>
             </LinearGradient>
+            //gay
             <Path d={`
               M0 0
               L${this.state.width} 0
