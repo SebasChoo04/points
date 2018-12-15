@@ -73,12 +73,12 @@ class ChooseHouse extends Component {
           }}>
             <Text style={{
               fontWeight: '600',
-              fontSize: 50,
+              fontSize: 30,
               color: 'white',
               fontFamily: 'Avenir Next',
               textAlign: 'center'
             }}>
-              House
+              What House Are You From?
             </Text>
           </SafeAreaView>
           <View style={{
@@ -88,36 +88,27 @@ class ChooseHouse extends Component {
           <View style={{
             flex: 2.7,
           }}>
-            <Text style={{
-              alignSelf: 'center',
-              fontFamily: 'Avenir Next',
-              fontSize: 20,
-              fontWeight: '500',
-              marginTop: 16
-            }}>
-              Choose your house
-            </Text>
             <FlatList data={
               [
                 {
-                  key: 'blue',
-                  color: ['blue', 'white']
-                },
-                {
-                  key: 'yellow',
-                  color: ['yellow', 'white']
-                },
-                {
-                  key: 'green',
-                  color: ['green', 'white']
-                },
-                {
-                  key: 'black',
+                  key: 'Black',
                   color: ['black', 'white']
                 },
                 {
-                  key: 'red',
+                  key: 'Blue',
+                  color: ['blue', 'white']
+                },
+                {
+                  key: 'Green',
+                  color: ['green', 'white']
+                },
+                {
+                  key: 'Red',
                   color: ['red', 'white']
+                },
+                {
+                  key: 'Yellow',
+                  color: ['yellow', 'white']
                 },
               ]
             } style={{
@@ -127,7 +118,7 @@ class ChooseHouse extends Component {
               return (
                   <TouchableOpacity style={{
                     width: this.state.width - 32,
-                    height: 50,
+                    height: 75,
                     marginLeft: 16,
                     alignItems: 'center',
                     flexDirection: 'row',
@@ -138,25 +129,25 @@ class ChooseHouse extends Component {
                       flex: 1,
                       alignItems: 'flex-end',
                       justifyContent: 'center',
-                      marginRight: 8
+                      marginRight: 40
                     }}>
                       <LinearGradient useAngle={true} angleCenter={{x: 0.5, y: 0.5}} angle={45} colors={item.color}
                                       style={{
-                                        height: 46,
+                                        height: 60,
                                         aspectRatio: 1,
-                                        borderRadius: 23
+                                        borderRadius: 30
                                       }}>
                       </LinearGradient>
                     </View>
                     <View style={{
-                      flex: 1,
+                      flex: 1.5,
                       alignItems: 'flex-start',
                       justifyContent: 'center',
                       marginLeft: 8
                     }}>
                       <Text style={{
                         fontFamily: 'Avenir Next',
-                        fontSize: 20,
+                        fontSize: 30,
                       }}>
                         {item.key}
                       </Text>
