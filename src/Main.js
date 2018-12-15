@@ -1,6 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator, createAppContainer, createStackNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon2 from 'react-native-vector-icons/FontAwesome'
 import HouseScreen from "./HouseScreen"
 import AnnouncementScreen from "./AnnouncementScreen"
 import RankingScreen from "./RankingScreen"
@@ -15,19 +16,26 @@ const TabNavigator = createBottomTabNavigator({
   "Ranking": {screen: RankingScreen},
   "Step Tracker": {screen: StepTrackerScreen}
 }, {
-  navigationOptions: ({navigation}) => ({
+  defaultNavigationOptions: ({navigation}) => ({
     tabBarIcon: () => {
       const {routeName} = navigation.state
-      if (routeName === "Announcements") {
-        return (
-            <Icon style={{
-              color: 'white'
-            }} name={"home"} size={25}/>
-        )
-      } else {
-        return (
-            <Icon name={'account-circle'} size={25}/>
-        )
+      switch (routeName) {
+        case 'Your House':
+          return(
+            <Icon name={"home"} size={25}/>
+          );
+        case 'Announcements':
+          return(
+            <Icon name={"announcement"} size={25}/>
+          );
+        case "Ranking":
+          return(
+            <Icon2 name={"trophy"} size={25}/>
+          );
+        case "Step Tracker":
+          return(
+            <Icon name={"directions-walk"} size={25}/>
+          )
       }
     }
   }),
