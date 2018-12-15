@@ -30,6 +30,7 @@ class ChooseHouse extends Component {
       const doc = await transaction.get(ref)
       transaction.update(ref, {house: house})
       this.props.changeLoginStatus(true)
+      this.props.changeHouse(house)
       const resetAction = StackActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({routeName: 'Tab'})],

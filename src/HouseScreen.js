@@ -1,15 +1,18 @@
 import React, {Component} from 'react'
-import {View, Text, Dimensions, SafeAreaView, FlatList, TouchableOpacity} from 'react-native'
+import {View, Text, Dimensions, SafeAreaView, FlatList, TouchableOpacity, YellowBox} from 'react-native'
 import Svg, {
   Path,
-  Rect
+  Rect,
+  LinearGradient,
+  Stop
 } from "react-native-svg";
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
 import {NavigationActions, StackActions} from "react-navigation";
-import LinearGradient from "react-native-linear-gradient";
+
+YellowBox.ignoreWarnings(['source.uri'])
 
 class HouseScreen extends Component {
   constructor(props) {
@@ -18,38 +21,40 @@ class HouseScreen extends Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       color: 'white',
-      imageLink: ''
+      imageLink: ""
     }
   }
 
   componentDidMount() {
+    this.houseData()
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       this.setState({width, height});
     })
-    this.houseData()
   }
+
   houseData() {
-    switch (this.props.userDetailsReducer.house){
+    switch (this.props.userDetailsReducer.house) {
       case 'Red':
         this.setState({color: 'red'});
         this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/red.png?alt=media&token=3a2098b4-c535-469e-b4ad-2213693c7e07'});
-            break
+        break
       case 'Black':
         this.setState({color: 'black'});
         this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/black.png?alt=media&token=0a0c181b-f779-4969-ab93-7a91eb897f5b'});
-            break
+        break
       case 'Green':
         this.setState({color: 'green'});
         this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/green.png?alt=media&token=d8db5dab-12ec-4312-82f9-97d27e91a4db'});
-            break
+        break
       case 'Yellow':
-        this.setState({color:'yellow'});
+        this.setState({color: 'yellow'});
         this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/yellow.png?alt=media&token=501b708d-8d29-4dd2-a66a-58fa6da77efb'});
-            break
+        break
       case 'Blue':
         this.setState({color: 'blue'});
         this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/blue.png?alt=media&token=1ce4e87f-de93-4871-92d4-2264f06fff9f'})
+        break
     }
   }
 
@@ -64,6 +69,10 @@ class HouseScreen extends Component {
             height: this.state.height,
             width: this.state.width
           }}>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
+              <Stop stopColor="#6ABAD5" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#1E9FD6" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
             <Path d={`
               M0 0
               L${this.state.width} 0
@@ -71,7 +80,7 @@ class HouseScreen extends Component {
               M${this.state.width} ${this.state.height / 3}
               L${this.state.width} 0
               L0 ${this.state.height / 3}
-            `} fill='blue'/>
+            `} fill='url(#blue)'/>
             <Path d={`
               M0 ${this.state.height / 3}
               C${this.state.width / 3} ${this.state.height / 4} ${this.state.width / 2} ${this.state.height / 2.5} ${this.state.width} ${this.state.height / 3}
@@ -79,7 +88,7 @@ class HouseScreen extends Component {
             <Path d={`
               M${this.state.width} ${this.state.height / 3}
               S${this.state.width / 100 * 80} ${this.state.height / 2.6} ${this.state.width / 2.05} ${this.state.height / 3}
-            `} fill='red'/>
+            `} fill='#1E9FD6'/>
           </Svg>
           <SafeAreaView style={{
             flex: 1,
@@ -110,34 +119,34 @@ class HouseScreen extends Component {
             flex: 2
           }}>
             <FlatList
-              data={
-                [
-                  {
-                    key: 'Captain',
-                    data: 'Ian Izree'
-                  },
-                  {
-                    key: 'Vice Captain',
-                    data: 'Khushi Bhagwat'
-                  },
-                  {
-                    key: 'Master',
-                    data: 'Mr Dennis Lam'
-                  },
-                  {
-                    key: 'Meeting Location',
-                    data: 'Auditorium'
-                  },
-                  {
-                    key: 'Motto',
-                    data: 'Brilliant and Brave',
-                  }
-                ]
-              } style={{
-                flex: 1,
-                marginTop: 32
+                data={
+                  [
+                    {
+                      key: 'Captain',
+                      data: 'Ian Izree'
+                    },
+                    {
+                      key: 'Vice Captain',
+                      data: 'Khushi Bhagwat'
+                    },
+                    {
+                      key: 'Master',
+                      data: 'Mr Dennis Lam'
+                    },
+                    {
+                      key: 'Meeting Location',
+                      data: 'Auditorium'
+                    },
+                    {
+                      key: 'Motto',
+                      data: 'Brilliant and Brave',
+                    }
+                  ]
+                } style={{
+              flex: 1,
+              marginTop: 32
             }} renderItem={({item}) => {
-              return(
+              return (
                   <View style={{
                     width: this.state.width - 32,
                     height: 75,

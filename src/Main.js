@@ -8,6 +8,7 @@ import StepTrackerScreen from "./StepTrackerScreen"
 import Login from "./Login";
 import ChooseHouse from "./ChooseHouse";
 import Splitter from "./Splitter";
+import {Text, View} from 'react-native'
 
 const TabNavigator = createBottomTabNavigator({
   "Your House": {screen: HouseScreen},
@@ -15,14 +16,12 @@ const TabNavigator = createBottomTabNavigator({
   "Ranking": {screen: RankingScreen},
   "Step Tracker": {screen: StepTrackerScreen}
 }, {
-  navigationOptions: ({navigation}) => ({
+  defaultNavigationOptions: ({navigation}) => ({
     tabBarIcon: () => {
       const {routeName} = navigation.state
       if (routeName === "Announcements") {
         return (
-            <Icon style={{
-              color: 'white'
-            }} name={"home"} size={25}/>
+            <Icon name={"home"} size={25}/>
         )
       } else {
         return (
@@ -30,16 +29,7 @@ const TabNavigator = createBottomTabNavigator({
         )
       }
     }
-  }),
-  /*
-  tabBarOptions: {
-    style: {
-      backgroundColor: '#66bb9b',
-    },
-    activeTintColor: '#1b5e20',
-    inactiveTintColor: '#4c8c4a'
-  }
-  */
+  })
 })
 
 const Main = createStackNavigator({
