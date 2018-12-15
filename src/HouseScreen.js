@@ -11,6 +11,8 @@ import ProgressBar from 'react-native-progress/Bar';
 import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
 import {NavigationActions, StackActions} from "react-navigation";
+import firebase from 'react-native-firebase'
+import * as Progress from "react-native-progress";
 
 YellowBox.ignoreWarnings(['source.uri'])
 
@@ -21,15 +23,86 @@ class HouseScreen extends Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       color: 'white',
-      imageLink: ""
+      imageLink: "",
+      listData: [],
+      loading: true
     }
+    this.firebaseRef = firebase.firestore().collection('HouseInfo').doc('w6czpnPEWY4cwKzzCUkb')
   }
 
   componentDidMount() {
+    this.getFirebaseData()
     this.houseData()
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       this.setState({width, height});
+    })
+  }
+
+  loading() {
+    if (this.state.loading) {
+      return (
+          <View style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Progress.CircleSnail color={['red', 'green', 'blue', 'yellow', 'black']}/>
+          </View>
+      )
+    }
+    return (
+        <FlatList
+            data={this.state.listData} style={{
+          flex: 1,
+          marginTop: 50
+        }} renderItem={({item}) => {
+          return (
+              <View style={{
+                marginBottom: 10,
+                alignItems: 'center'
+              }}>
+                <Text style={{
+                  fontSize: 20,
+                  fontWeight: '600',
+                  fontFamily: 'Avenir Next'
+                }}>
+                  {item.key}
+                </Text>
+                <Text style={{
+                  fontSize: 25,
+                  fontFamily: 'Avenir Next'
+                }}>
+                  {item.data}
+                </Text>
+              </View>
+          )
+        }}/>
+    )
+  }
+
+  async getFirebaseData() {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.firebaseRef)
+      if (!doc.exists) {
+        alert('An error has occurred, please contact Sebastian Choo')
+        transaction.set(this.firebaseRef, {})
+        return {}
+      }
+      const houseInfo = doc.data()[this.props.userDetailsReducer.house.toLowerCase()]
+      var arr = []
+      Object.keys(houseInfo).forEach((x) => {
+        var j = {}
+        var result = x.replace( /([A-Z])/g, " $1" );
+        var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+        j['key'] = finalResult
+        j['data'] = houseInfo[x]
+        arr.push(j)
+      })
+      this.setState({listData: arr}, () => {
+        this.setState({loading: false})
+      })
+      transaction.update(this.firebaseRef, doc.data())
     })
   }
 
@@ -58,6 +131,21 @@ class HouseScreen extends Component {
     }
   }
 
+  bottomCurveColor() {
+    switch (this.props.userDetailsReducer.house) {
+      case 'Red':
+        return '#af4448'
+      case 'Black':
+        return '#373737'
+      case 'Green':
+        return "#519657"
+      case 'Yellow':
+        return "#fdd835"
+      case 'Blue':
+        return "#0093c4"
+    }
+  }
+
   render() {
     return (
         <View style={{
@@ -70,8 +158,24 @@ class HouseScreen extends Component {
             width: this.state.width
           }}>
             <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
-              <Stop stopColor="#6ABAD5" stopOpacity="1" offset="0%"/>
-              <Stop stopColor="#1E9FD6" stopOpacity="1" offset="100%"/>
+              <Stop stopColor="#4fc3f7" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#0093c4" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="red">
+              <Stop stopColor="#e57373" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#af4448" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="green">
+              <Stop stopColor="#81c784" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#519657" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="yellow">
+              <Stop stopColor="#fff176" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#fdd835" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="black">
+              <Stop stopColor="#616161" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#373737" stopOpacity="1" offset="100%"/>
             </LinearGradient>
             <Path d={`
               M0 0
@@ -80,7 +184,7 @@ class HouseScreen extends Component {
               M${this.state.width} ${this.state.height / 3}
               L${this.state.width} 0
               L0 ${this.state.height / 3}
-            `} fill='url(#blue)'/>
+            `} fill={`url(#${this.state.color})`}/>
             <Path d={`
               M0 ${this.state.height / 3}
               C${this.state.width / 3} ${this.state.height / 4} ${this.state.width / 2} ${this.state.height / 2.5} ${this.state.width} ${this.state.height / 3}
@@ -88,7 +192,7 @@ class HouseScreen extends Component {
             <Path d={`
               M${this.state.width} ${this.state.height / 3}
               S${this.state.width / 100 * 80} ${this.state.height / 2.6} ${this.state.width / 2.05} ${this.state.height / 3}
-            `} fill='#1E9FD6'/>
+            `} fill={this.bottomCurveColor()}/>
           </Svg>
           <SafeAreaView style={{
             flex: 1,
@@ -100,6 +204,7 @@ class HouseScreen extends Component {
                 style={{
                   width: '100%',
                   height: '60%',
+                  marginTop: 8
                 }}
                 resizeMode={'contain'}
                 source={{
@@ -110,7 +215,8 @@ class HouseScreen extends Component {
               fontFamily: 'Avenir Next',
               fontSize: 30,
               fontWeight: '600',
-              color: 'white'
+              color: 'white',
+              marginTop: 8
             }}>
               {this.props.userDetailsReducer.house} House
             </Text>
@@ -118,71 +224,7 @@ class HouseScreen extends Component {
           <View style={{
             flex: 2
           }}>
-            <FlatList
-                data={
-                  [
-                    {
-                      key: 'Captain',
-                      data: 'Ian Izree'
-                    },
-                    {
-                      key: 'Vice Captain',
-                      data: 'Khushi Bhagwat'
-                    },
-                    {
-                      key: 'Master',
-                      data: 'Mr Dennis Lam'
-                    },
-                    {
-                      key: 'Meeting Location',
-                      data: 'Auditorium'
-                    },
-                    {
-                      key: 'Motto',
-                      data: 'Brilliant and Brave',
-                    }
-                  ]
-                } style={{
-              flex: 1,
-              marginTop: 32
-            }} renderItem={({item}) => {
-              return (
-                  <View style={{
-                    width: this.state.width - 32,
-                    height: 75,
-                    marginLeft: 16,
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}>
-                    <View style={{
-                      flex: 1,
-                      alignItems: 'flex-end',
-                      justifyContent: 'center',
-                      marginRight: 20
-                    }}>
-                      <Text style={{
-                        fontFamily: 'Avenir Next',
-                        fontSize: 30
-                      }}>
-                        {item.key}
-                      </Text>
-                    </View>
-                    <View style={{
-                      flex: 1.5,
-                      alignItems: 'flex-start',
-                      justifyContent: 'center',
-                      marginLeft: 8
-                    }}>
-                      <Text style={{
-                        fontFamily: 'Avenir Next',
-                        fontSize: 20,
-                      }}>
-                        {item.data}
-                      </Text>
-                    </View>
-                  </View>
-              )
-            }}/>
+            {this.loading()}
           </View>
         </View>
     )
