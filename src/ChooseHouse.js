@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity} from 'react-native'
+import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Alert} from 'react-native'
 import {connect} from 'react-redux'
 import Svg from "react-native-svg";
 import Path from "react-native-svg/elements/Path";
@@ -15,6 +15,7 @@ class ChooseHouse extends Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
     }
+    this.egg = firebase.firestore().collection('eggs').doc('purple')
   }
 
   componentDidMount() {
@@ -45,6 +46,36 @@ class ChooseHouse extends Component {
         <View style={{
           flex: 1
         }}>
+          <TouchableOpacity style={{
+            height: this.state.height / 3,
+            width: this.state.width,
+            position: 'absolute',
+            zIndex: 2
+          }} onPress={() => {
+            Alert.alert(
+                'Powerful and Passionate',
+                `Congratulations!\nYou have discovered the one and only Purple House!\n\nHouse Captain: Carl Ian Voller\nMembers: 1\nPoints: NaN\nMeeting Location: 3.1215269`,
+                [
+                  {
+                    text: 'Ok', onPress: () => {
+                      firebase.firestore().runTransaction(async transaction => {
+                        const doc = await transaction.get(this.egg)
+                        if (!doc.exists) {
+                          transaction.set(this.egg, {people: [this.props.userDetailsReducer.email]})
+                          return {people: [this.props.userDetailsReducer.email]}
+                        }
+                        var x = doc.data().people.slice(0)
+                        x.push(this.props.userDetailsReducer.email)
+                        transaction.update(this.egg, {people: x})
+                        return
+                      })
+                    }
+                  },
+                ],
+                {cancelable: false}
+            )
+          }}>
+          </TouchableOpacity>
           <Svg style={{
             position: 'absolute',
             height: this.state.height,

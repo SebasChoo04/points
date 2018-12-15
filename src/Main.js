@@ -43,9 +43,9 @@ const TabNavigator = createBottomTabNavigator({
 
 const Main = createStackNavigator({
   Splitter: {screen: Splitter},
+  ChooseHouse: {screen: ChooseHouse},
   Login: {screen: Login},
   Tab: {screen: TabNavigator},
-  ChooseHouse: {screen: ChooseHouse}
 }, {
   headerMode: 'none'
 });
