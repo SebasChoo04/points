@@ -1,7 +1,8 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {NavigationActions, StackActions} from "react-navigation";
-
+import {connect} from 'react-redux'
+import {changeEmail, changeLoginStatus, changeName, resetAll} from "./actions";
 class StepTrackerScreen extends React.Component {
     render() {
         return (
@@ -24,6 +25,12 @@ class StepTrackerScreen extends React.Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return state
+}
 
+const mapDispatchToProps = (dispatch) => ({
+    resetAll: () => dispatch(resetAll())
+})
 
-export default StepTrackerScreen
+export default connect(mapStateToProps,mapDispatchToProps)(StepTrackerScreen)

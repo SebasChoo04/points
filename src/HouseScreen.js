@@ -33,19 +33,23 @@ class HouseScreen extends Component {
     switch (this.props.userDetailsReducer.house){
       case 'Red':
         this.setState({color: 'red'});
-        this.setState({imageLink: ''})
+        this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/red.png?alt=media&token=3a2098b4-c535-469e-b4ad-2213693c7e07'});
             break
       case 'Black':
-        this.setState({color:'black'});
+        this.setState({color: 'black'});
+        this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/black.png?alt=media&token=0a0c181b-f779-4969-ab93-7a91eb897f5b'});
             break
       case 'Green':
-        this.setState({color:'green'});
+        this.setState({color: 'green'});
+        this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/green.png?alt=media&token=d8db5dab-12ec-4312-82f9-97d27e91a4db'});
             break
       case 'Yellow':
         this.setState({color:'yellow'});
+        this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/yellow.png?alt=media&token=501b708d-8d29-4dd2-a66a-58fa6da77efb'});
             break
       case 'Blue':
-        this.setState({color:'blue'})
+        this.setState({color: 'blue'});
+        this.setState({imageLink: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/blue.png?alt=media&token=1ce4e87f-de93-4871-92d4-2264f06fff9f'})
     }
   }
 
@@ -67,7 +71,7 @@ class HouseScreen extends Component {
               M${this.state.width} ${this.state.height / 3}
               L${this.state.width} 0
               L0 ${this.state.height / 3}
-            `} fill={this.state.color}/>
+            `} fill='blue'/>
             <Path d={`
               M0 ${this.state.height / 3}
               C${this.state.width / 3} ${this.state.height / 4} ${this.state.width / 2} ${this.state.height / 2.5} ${this.state.width} ${this.state.height / 3}
@@ -75,7 +79,7 @@ class HouseScreen extends Component {
             <Path d={`
               M${this.state.width} ${this.state.height / 3}
               S${this.state.width / 100 * 80} ${this.state.height / 2.6} ${this.state.width / 2.05} ${this.state.height / 3}
-            `} fill={this.state.color}/>
+            `} fill='red'/>
           </Svg>
           <SafeAreaView style={{
             flex: 1,
@@ -90,7 +94,7 @@ class HouseScreen extends Component {
                 }}
                 resizeMode={'contain'}
                 source={{
-                  uri: 'https://firebasestorage.googleapis.com/v0/b/sst-house-point.appspot.com/o/black.png?alt=media&token=0a0c181b-f779-4969-ab93-7a91eb897f5b',
+                  uri: this.state.imageLink,
                 }}
             />
             <Text style={{
