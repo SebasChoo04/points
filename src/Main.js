@@ -39,15 +39,6 @@ const TabNavigator = createBottomTabNavigator({
       }
     }
   }),
-  /*
-  tabBarOptions: {
-    style: {
-      backgroundColor: '#66bb9b',
-    },
-    activeTintColor: '#1b5e20',
-    inactiveTintColor: '#4c8c4a'
-  }
-  */
 })
 
 const Main = createStackNavigator({
