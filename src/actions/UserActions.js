@@ -33,3 +33,10 @@ export function changeHouse(house) {
     house
   }
 }
+
+export function changeAllEggCount(count) {
+  return {
+    type: redux.ALL_EGG,
+    count
+  }
+}

@@ -1,8 +1,18 @@
 import React from 'react';
-import {Text, View, FlatList, Dimensions, SafeAreaView, TouchableOpacity, Animated, RefreshControl} from 'react-native';
+import {
+  Text,
+  View,
+  FlatList,
+  Dimensions,
+  SafeAreaView,
+  TouchableOpacity,
+  Animated,
+  RefreshControl,
+  Alert
+} from 'react-native';
 import firebase from 'react-native-firebase';
 import {connect} from 'react-redux'
-import {changeEmail, changeLoginStatus, changeName, resetAll} from "./actions";
+import {changeEmail, changeLoginStatus, changeName, resetAll, changeAllEggCount} from "./actions";
 import Svg, {
   Path,
   LinearGradient,
@@ -112,32 +122,33 @@ class AnnouncementScreen extends React.Component {
         <View style={{
           flex: 1
         }}>
-          <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => {
-            return (
-                <View style={{
-                  backgroundColor: this.tabBarColor(),
-                  width: this.state.width - 32,
-                  alignSelf: 'center',
-                  padding: 16,
-                  marginTop: 16,
-                  borderRadius: 5
-                }}>
-                  <Text style={{
-                    color: 'white',
-                    fontFamily: Fonts.MEDIUM,
-                    fontSize: 20
-                  }}>
-                    {item.title}
-                  </Text>
-                  <Text style={{
-                    color: 'white',
-                    fontFamily: Fonts.REGULAR
-                  }}>
-                    {item.content}
-                  </Text>
-                </View>
-            )
-          }}/>
+          <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => {
+                      return (
+                          <View style={{
+                            backgroundColor: this.tabBarColor(),
+                            width: this.state.width - 32,
+                            alignSelf: 'center',
+                            padding: 16,
+                            marginTop: 16,
+                            borderRadius: 5
+                          }}>
+                            <Text style={{
+                              color: 'white',
+                              fontFamily: Fonts.MEDIUM,
+                              fontSize: 20
+                            }}>
+                              {item.title}
+                            </Text>
+                            <Text style={{
+                              color: 'white',
+                              fontFamily: Fonts.REGULAR
+                            }}>
+                              {item.content}
+                            </Text>
+                          </View>
+                      )
+                    }}/>
         </View>
     )
   }
@@ -158,32 +169,33 @@ class AnnouncementScreen extends React.Component {
         <View style={{
           flex: 1
         }}>
-          <FlatList data={this.state.AnnouncementsAll} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => {
-            return (
-                <View style={{
-                  backgroundColor: this.tabBarColor(),
-                  width: this.state.width - 32,
-                  alignSelf: 'center',
-                  padding: 16,
-                  marginTop: 16,
-                  borderRadius: 5
-                }}>
-                  <Text style={{
-                    color: 'white',
-                    fontFamily: Fonts.MEDIUM,
-                    fontSize: 20
-                  }}>
-                    {item.title}
-                  </Text>
-                  <Text style={{
-                    color: 'white',
-                    fontFamily: Fonts.REGULAR
-                  }}>
-                    {item.content}
-                  </Text>
-                </View>
-            )
-          }}/>
+          <FlatList data={this.state.AnnouncementsAll} keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => {
+                      return (
+                          <View style={{
+                            backgroundColor: this.tabBarColor(),
+                            width: this.state.width - 32,
+                            alignSelf: 'center',
+                            padding: 16,
+                            marginTop: 16,
+                            borderRadius: 5
+                          }}>
+                            <Text style={{
+                              color: 'white',
+                              fontFamily: Fonts.MEDIUM,
+                              fontSize: 20
+                            }}>
+                              {item.title}
+                            </Text>
+                            <Text style={{
+                              color: 'white',
+                              fontFamily: Fonts.REGULAR
+                            }}>
+                              {item.content}
+                            </Text>
+                          </View>
+                      )
+                    }}/>
         </View>
     )
   }
@@ -308,6 +320,34 @@ class AnnouncementScreen extends React.Component {
                           return (
                               <TouchableOpacity
                                   onPress={() => {
+                                    if (i == 1) {
+                                      if (this.props.userDetailsReducer.count == 50) {
+                                        Alert.alert(
+                                            'All Announcements!',
+                                            `Congratulations!\nYou have discovered the one and only announcement that doesn't exit...oh...`,
+                                            [
+                                              {
+                                                text: 'Ok', onPress: () => {
+                                                  const ref = firebase.firestore().collection('eggs').doc('all')
+                                                  firebase.firestore().runTransaction(async transaction => {
+                                                    const doc = await transaction.get(ref)
+                                                    if (!doc.exists) {
+                                                      transaction.set(ref, {people: [this.props.userDetailsReducer.email]})
+                                                      return {people: [this.props.userDetailsReducer.email]}
+                                                    }
+                                                    var x = doc.data().people.slice(0)
+                                                    x.push(this.props.userDetailsReducer.email)
+                                                    transaction.update(ref, {people: x})
+                                                    return
+                                                  })
+                                                }
+                                              },
+                                            ],
+                                            {cancelable: false}
+                                        )
+                                      }
+                                      this.props.changeAllEggCount(this.props.userDetailsReducer.count += 1)
+                                    }
                                     var clone = Object.assign({}, this.state.navigationBar)
                                     clone.index = i
                                     this.setState({navigationBar: clone})
@@ -346,7 +386,8 @@ const mapDispatchToProps = (dispatch) => ({
   changeEmail: email => dispatch(changeEmail(email)),
   changeName: name => dispatch(changeName(name)),
   changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll())
+  resetAll: () => dispatch(resetAll()),
+  changeAllEggCount: (count) => dispatch(changeAllEggCount(count))
 })
 
 

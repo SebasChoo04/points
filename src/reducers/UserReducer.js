@@ -4,7 +4,8 @@ const initialUserInfo = {
   name: "",
   email: "",
   loginStatus: false,
-  house: ""
+  house: "",
+  count: 0
 }
 
 export function userDetailsReducer(state = initialUserInfo, action) {
@@ -17,6 +18,8 @@ export function userDetailsReducer(state = initialUserInfo, action) {
       return Object.assign({}, state, {loginStatus: action.loginStatus})
     case redux.USER_HOUSE:
       return Object.assign({}, state, {house: action.house})
+    case redux.ALL_EGG:
+      return Object.assign({}, state, {count: action.count})
     default:
       return state
   }
