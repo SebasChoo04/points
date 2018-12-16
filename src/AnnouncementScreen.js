@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, Dimensions, SafeAreaView} from 'react-native';
+import {Text, View, FlatList, Dimensions, SafeAreaView, TouchableOpacity, Animated, RefreshControl} from 'react-native';
 import firebase from 'react-native-firebase';
 import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from "./actions";
@@ -10,6 +10,7 @@ import Svg, {
 } from "react-native-svg";
 import {Fonts} from "./Constants";
 import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
+import * as Progress from "react-native-progress";
 
 class AnnouncementScreen extends React.Component {
   constructor(props) {
@@ -19,7 +20,9 @@ class AnnouncementScreen extends React.Component {
       svgHeight: Dimensions.get('window').height / 3,
       height: Dimensions.get('window').height,
       Announcements: [],
-      loading: true,
+      AnnouncementsAll: [],
+      houseLoading: true,
+      allLoading: true,
       navigationBar: {
         index: 0,
         routes: [{
@@ -33,10 +36,12 @@ class AnnouncementScreen extends React.Component {
       }
     }
     this.firebaseRef = firebase.firestore().collection('announcements').doc(this.props.userDetailsReducer.house.toLowerCase())
+    this.firebaseRefAll = firebase.firestore().collection('announcements').doc('everyone')
   }
 
   componentDidMount() {
     this.getFirebaseData()
+    this.getFirebaseDataAll()
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       const modHeight = height / 3
@@ -54,37 +59,131 @@ class AnnouncementScreen extends React.Component {
       }
       const y = doc.data().announcement.slice(0)
       this.setState({Announcements: y}, () => {
-        this.setState({loading: false})
+        this.setState({houseLoading: false})
       })
       transaction.update(this.firebaseRef, doc.data())
     })
   }
 
-  // bottomCurveColor() {
-  //   switch (this.props.userDetailsReducer.house) {
-  //     case 'Red':
-  //       return '#af4448'
-  //     case 'Black':
-  //       return '#373737'
-  //     case 'Green':
-  //       return "#519657"
-  //     case 'Yellow':
-  //       return "#fdd835"
-  //     case 'Blue':
-  //       return "#0093c4"
-  //   }
-  // }
+  async getFirebaseDataAll() {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.firebaseRefAll)
+      if (!doc.exists) {
+        alert('An error has occurred, please contact Sebastian Choo')
+        transaction.set(this.firebaseRefAll, {Error: 'Invalid doc in AnnouncementScreen.js'})
+        return {Error: 'Invalid doc in AnnouncementScreen.js'}
+      }
+      const y = doc.data().announcement.slice(0)
+      this.setState({AnnouncementsAll: y}, () => {
+        this.setState({allLoading: false})
+      })
+      transaction.update(this.firebaseRefAll, doc.data())
+    })
+  }
 
-  allAnnouncements() {
+  tabBarColor() {
+    switch (this.props.userDetailsReducer.house) {
+      case 'Red':
+        return '#af4448'
+      case 'Black':
+        return '#373737'
+      case 'Green':
+        return "#519657"
+      case 'Yellow':
+        return "#fdd835"
+      case 'Blue':
+        return "#0093c4"
+    }
+  }
+
+  houseAnnouncements() {
+    if (this.state.houseLoading) {
+      return (
+          <View style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Progress.CircleSnail color={['red', 'green', 'blue', 'yellow', 'black']}/>
+          </View>
+      )
+    }
     return (
-        <View>
+        <View style={{
+          flex: 1
+        }}>
+          <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => {
+            return (
+                <View style={{
+                  backgroundColor: this.tabBarColor(),
+                  width: this.state.width - 32,
+                  alignSelf: 'center',
+                  padding: 16,
+                  marginTop: 16,
+                  borderRadius: 5
+                }}>
+                  <Text style={{
+                    color: 'white',
+                    fontFamily: Fonts.MEDIUM,
+                    fontSize: 20
+                  }}>
+                    {item.title}
+                  </Text>
+                  <Text style={{
+                    color: 'white',
+                    fontFamily: Fonts.REGULAR
+                  }}>
+                    {item.content}
+                  </Text>
+                </View>
+            )
+          }}/>
         </View>
     )
   }
 
-  houseAnnouncements() {
+  allAnnouncements() {
+    if (this.state.allLoading) {
+      return (
+          <View style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Progress.CircleSnail color={['red', 'green', 'blue', 'yellow', 'black']}/>
+          </View>
+      )
+    }
     return (
-        <View>
+        <View style={{
+          flex: 1
+        }}>
+          <FlatList data={this.state.AnnouncementsAll} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => {
+            return (
+                <View style={{
+                  backgroundColor: this.tabBarColor(),
+                  width: this.state.width - 32,
+                  alignSelf: 'center',
+                  padding: 16,
+                  marginTop: 16,
+                  borderRadius: 5
+                }}>
+                  <Text style={{
+                    color: 'white',
+                    fontFamily: Fonts.MEDIUM,
+                    fontSize: 20
+                  }}>
+                    {item.title}
+                  </Text>
+                  <Text style={{
+                    color: 'white',
+                    fontFamily: Fonts.REGULAR
+                  }}>
+                    {item.content}
+                  </Text>
+                </View>
+            )
+          }}/>
         </View>
     )
   }
@@ -157,10 +256,12 @@ class AnnouncementScreen extends React.Component {
           }}>
             <TabView
                 style={{
-                  width: this.state.width
+                  width: this.state.width,
+                  height: this.state.height
                 }}
                 initialLayout={{
-                  width: this.state.width
+                  width: this.state.width,
+                  height: this.state.height
                 }}
                 navigationState={this.state.navigationBar}
                 onIndexChange={(index) => {
@@ -169,9 +270,67 @@ class AnnouncementScreen extends React.Component {
                   this.setState({navigationBar: clone})
                 }}
                 renderScene={SceneMap({
-                  House: this.houseAnnouncements,
-                  All: this.allAnnouncements
-                })}
+                      House: () => {
+                        return (
+                            <View style={{
+                              flex: 1
+                            }}>
+                              {this.houseAnnouncements()}
+                            </View>
+                        )
+                      },
+                      All: () => {
+                        return (
+                            <View style={{
+                              flex: 1
+                            }}>
+                              {this.allAnnouncements()}
+                            </View>
+                        )
+                      }
+                    }
+                )}
+                renderTabBar={(props) => {
+                  const inputRange = props.navigationState.routes.map((x, i) => i);
+                  return (
+                      <View style={{
+                        flexDirection: 'row',
+                        backgroundColor: this.tabBarColor(),
+                        height: 50
+                      }}>
+                        {props.navigationState.routes.map((route, i) => {
+                          const color = props.position.interpolate({
+                            inputRange,
+                            outputRange: inputRange.map(
+                                inputIndex => (inputIndex === i ? 'white' : '#A9A9A9')
+                            ),
+                          });
+                          return (
+                              <TouchableOpacity
+                                  onPress={() => {
+                                    var clone = Object.assign({}, this.state.navigationBar)
+                                    clone.index = i
+                                    this.setState({navigationBar: clone})
+                                  }}
+                                  style={{
+                                    flex: 1,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                  }} key={i}>
+                                <Animated.Text style={{
+                                  color,
+                                  fontFamily: Fonts.MEDIUM,
+                                  fontWeight: '500',
+                                  fontSize: 17
+                                }}>
+                                  {route.title}
+                                </Animated.Text>
+                              </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                  );
+                }}
             />
           </View>
         </View>

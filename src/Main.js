@@ -11,16 +11,16 @@ import ChooseHouse from "./ChooseHouse";
 import Splitter from "./Splitter";
 
 const TabNavigator = createBottomTabNavigator({
-  "Your House": {screen: HouseScreen},
+  "House": {screen: HouseScreen},
   "Announcements": {screen: AnnouncementScreen},
-  "Ranking": {screen: RankingScreen},
-  "Step Tracker": {screen: StepTrackerScreen}
+  "Rankings": {screen: RankingScreen},
+  "Steps": {screen: StepTrackerScreen}
 }, {
   defaultNavigationOptions: ({navigation}) => ({
     tabBarIcon: () => {
       const {routeName} = navigation.state
       switch (routeName) {
-        case 'Your House':
+        case 'House':
           return(
             <Icon name={"home"} size={25}/>
           );
@@ -28,11 +28,11 @@ const TabNavigator = createBottomTabNavigator({
           return(
             <Icon name={"announcement"} size={25}/>
           );
-        case "Ranking":
+        case "Rankings":
           return(
             <Icon2 name={"trophy"} size={25}/>
           );
-        case "Step Tracker":
+        case "Steps":
           return(
             <Icon name={"directions-walk"} size={25}/>
           )
