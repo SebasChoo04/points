@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {View, Text, Dimensions, SafeAreaView, FlatList, TouchableOpacity, YellowBox} from 'react-native'
 import Svg, {
   Path,
-  Rect,
   LinearGradient,
   Stop
 } from "react-native-svg";
@@ -10,7 +9,6 @@ import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
-import {NavigationActions, StackActions} from "react-navigation";
 import firebase from 'react-native-firebase'
 import * as Progress from "react-native-progress";
 
@@ -18,7 +16,7 @@ YellowBox.ignoreWarnings(['source.uri'])
 
 class HouseScreen extends Component {
   constructor(props) {
-    super(props)
+      super(props)
     this.state = {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
@@ -86,7 +84,7 @@ class HouseScreen extends Component {
       const doc = await transaction.get(this.firebaseRef)
       if (!doc.exists) {
         alert('An error has occurred, please contact Sebastian Choo')
-        transaction.set(this.firebaseRef, {})
+        transaction.set(this.firebaseRef, {Error: 'Invalid doc in HouseScreen.js'})
         return {}
       }
       const houseInfo = doc.data()[this.props.userDetailsReducer.house.toLowerCase()]
