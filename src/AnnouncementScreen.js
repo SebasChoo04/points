@@ -19,7 +19,18 @@ class AnnouncementScreen extends React.Component {
       svgHeight: Dimensions.get('window').height / 3,
       height: Dimensions.get('window').height,
       Announcements: [],
-      loading: true
+      loading: true,
+      navigationBar: {
+        index: 0,
+        routes: [{
+          key: 'House',
+          title: 'House',
+        },
+          {
+            key: 'All',
+            title: 'All',
+          }],
+      }
     }
     this.firebaseRef = firebase.firestore().collection('announcements').doc(this.props.userDetailsReducer.house.toLowerCase())
   }
@@ -64,38 +75,52 @@ class AnnouncementScreen extends React.Component {
   //   }
   // }
 
+  allAnnouncements() {
+    return (
+        <View>
+        </View>
+    )
+  }
+
+  houseAnnouncements() {
+    return (
+        <View>
+        </View>
+    )
+  }
+
   render() {
     return (
-      <View style={{
-        backgroundColor: 'white',
-        flex: 1
-      }}>
-        <Svg style={{
-          position: 'absolute',
-          height: this.state.height,
-          width: this.state.width
+        <View style={{
+          backgroundColor: 'white',
+          flex: 1
         }}>
-          <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
-            <Stop stopColor="#4fc3f7" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#0093c4" stopOpacity="1" offset="100%"/>
-          </LinearGradient>
-          <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="red">
-            <Stop stopColor="#e57373" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#af4448" stopOpacity="1" offset="100%"/>
-          </LinearGradient>
-          <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="green">
-            <Stop stopColor="#81c784" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#519657" stopOpacity="1" offset="100%"/>
-          </LinearGradient>
-          <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="yellow">
-            <Stop stopColor="#fff176" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#fdd835" stopOpacity="1" offset="100%"/>
-          </LinearGradient>
-          <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="black">
-            <Stop stopColor="#616161" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#373737" stopOpacity="1" offset="100%"/>
-          </LinearGradient>
-          <Path d={`
+          <Svg style={{
+            position: 'absolute',
+            height: this.state.height,
+            width: this.state.width
+          }}>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
+              <Stop stopColor="#4fc3f7" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#0093c4" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="red">
+              <Stop stopColor="#e57373" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#af4448" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="green">
+              <Stop stopColor="#81c784" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#519657" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="yellow">
+              <Stop stopColor="#fff176" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#fdd835" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="black">
+              <Stop stopColor="#616161" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#373737" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
+            <Path d={`
               M0 0
               L${this.state.width} 0
               L0 ${this.state.svgHeight / 3}
@@ -103,67 +128,53 @@ class AnnouncementScreen extends React.Component {
               L${this.state.width} 0
               L0 ${this.state.svgHeight / 3}
             `} fill={`url(#${this.props.userDetailsReducer.house.toLowerCase()})`}/>
-          {/*<Path d={`*/}
-          {/*M-5 ${this.state.svgHeight / 3 + 1}*/}
-          {/*C${this.state.width / 3} ${this.state.svgHeight / 4} ${this.state.width / 2} ${this.state.svgHeight / 2.5} ${this.state.width} ${this.state.svgHeight / 3 + 1}*/}
-          {/*`} fill={'white'}/>*/}
-          {/*<Path d={`*/}
-          {/*M${this.state.width + 5} ${this.state.svgHeight / 3 - 1}*/}
-          {/*S${this.state.width / 100 * 80} ${this.state.svgHeight / 2.5} ${this.state.width / 2.2} ${this.state.svgHeight / 3 - 1}*/}
-          {/*`} fill={this.bottomCurveColor()}/>*/}
+            {/*<Path d={`*/}
+            {/*M-5 ${this.state.svgHeight / 3 + 1}*/}
+            {/*C${this.state.width / 3} ${this.state.svgHeight / 4} ${this.state.width / 2} ${this.state.svgHeight / 2.5} ${this.state.width} ${this.state.svgHeight / 3 + 1}*/}
+            {/*`} fill={'white'}/>*/}
+            {/*<Path d={`*/}
+            {/*M${this.state.width + 5} ${this.state.svgHeight / 3 - 1}*/}
+            {/*S${this.state.width / 100 * 80} ${this.state.svgHeight / 2.5} ${this.state.width / 2.2} ${this.state.svgHeight / 3 - 1}*/}
+            {/*`} fill={this.bottomCurveColor()}/>*/}
 
-        </Svg>
-        <SafeAreaView style={{
-          height: this.state.svgHeight / 3,
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <Text style={{
-            fontFamily: Fonts.MEDIUM,
-            fontSize: 20,
-            color: 'white'
+          </Svg>
+          <SafeAreaView style={{
+            height: this.state.svgHeight / 3,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-            Announcements
-          </Text>
-        </SafeAreaView>
-        <View style={{
-          flex: 12,
-        }}>
-          <TabBar
-            initialLayout={{
-              width: this.state.width
-            }}
-            navigationState={{
-              index: 0,
-              routes: [{
-                key: 'House',
-                title: 'House',
-              },
-                {
-                  key: 'All',
-                  title: 'All',
-                }],
-            }}
-            renderScene={SceneMap({
-              'House': () => {
-                return (
-                  <View style={{
-                    flex: 1,
-                  }}/>
-                )
-              },
-              'All': () => {
-                return (
-                  <View style={{
-                    flex: 1,
-                  }}/>
-                )
-              }
-            })}
-          />
+            <Text style={{
+              fontFamily: Fonts.MEDIUM,
+              fontSize: 20,
+              color: 'white'
+            }}>
+              Announcements
+            </Text>
+          </SafeAreaView>
+          <View style={{
+            flex: 12,
+          }}>
+            <TabView
+                style={{
+                  width: this.state.width
+                }}
+                initialLayout={{
+                  width: this.state.width
+                }}
+                navigationState={this.state.navigationBar}
+                onIndexChange={(index) => {
+                  var clone = Object.assign({}, this.state.navigationBar)
+                  clone.index = index
+                  this.setState({navigationBar: clone})
+                }}
+                renderScene={SceneMap({
+                  House: this.houseAnnouncements,
+                  All: this.allAnnouncements
+                })}
+            />
+          </View>
         </View>
-      </View>
     );
   }
 }
