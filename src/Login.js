@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import {View, Text, Dimensions, SafeAreaView, Image} from 'react-native'
-import Svg, {
-  Path,
-  Rect
-} from "react-native-svg";
+import Svg, {Path} from "react-native-svg";
 import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google-signin";
 import {GoogleApiAvailabilityType} from "react-native-firebase";
 import {connect} from 'react-redux'
@@ -54,7 +51,7 @@ class Login extends Component {
         return {house: 'uninitialized'}
       }
       transaction.update(ref, {house: doc.data().house})
-      if (doc.data().house == 'uninitialized') {
+      if (doc.data().house === 'uninitialized') {
         this.props.navigation.navigate('ChooseHouse')
       } else {
         this.props.changeLoginStatus(true)

@@ -25,20 +25,19 @@ class AnnouncementScreen extends React.Component {
         transaction.set(this.firebaseRef, {Error: 'Invalid doc in AnnouncementScreen.js'})
         return {}
       }
-      const houseInfo = doc.data()[this.props.userDetailsReducer.house.toLowerCase()]
+      const announcementHouse = doc.data()['announcement']
       var arr = []
-      Object.keys(houseInfo).forEach((x) => {
+      Object.keys(announcementHouse).forEach((x) => {
         var j = {}
-        var result = x.replace(/([A-Z])/g, " $1");
-        var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-        j['key'] = finalResult
-        j['data'] = houseInfo[x]
+        j['key'] = x
+        j['data'] = announcementHouse[x]
         arr.push(j)
       })
-      this.setState({listData: arr}, () => {
+      this.setState({Announcements: arr}, () => {
         this.setState({loading: false})
       })
       transaction.update(this.firebaseRef, doc.data())
+      alert(this.state.Announcements)
     })
   }
 
