@@ -11,6 +11,7 @@ import {connect} from 'react-redux'
 import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
 import firebase from 'react-native-firebase'
 import * as Progress from "react-native-progress";
+import {Fonts} from "./Constants";
 
 YellowBox.ignoreWarnings(['source.uri'])
 
@@ -57,19 +58,19 @@ class HouseScreen extends Component {
         }} renderItem={({item}) => {
           return (
               <View style={{
-                marginBottom: 10,
+                marginBottom: 16,
                 alignItems: 'center'
               }}>
                 <Text style={{
                   fontSize: 20,
                   fontWeight: '600',
-                  fontFamily: 'Avenir Next'
+                  fontFamily: Fonts.REGULAR
                 }}>
                   {item.key}
                 </Text>
                 <Text style={{
                   fontSize: 25,
-                  fontFamily: 'Avenir Next'
+                  fontFamily: Fonts.REGULAR
                 }}>
                   {item.data}
                 </Text>
@@ -210,7 +211,7 @@ class HouseScreen extends Component {
                 }}
             />
             <Text style={{
-              fontFamily: 'Avenir Next',
+              fontFamily: Fonts.REGULAR,
               fontSize: 30,
               fontWeight: '600',
               color: 'white',

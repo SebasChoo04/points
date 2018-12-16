@@ -5,3 +5,8 @@ export const redux = {
   USER_LOGIN_STATUS: 'userloginstatus',
   USER_HOUSE: 'userhouse'
 }
+
+export const Fonts = {
+  MEDIUM: 'Raleway-Medium',
+  REGULAR: 'Raleway-Regular'
+}

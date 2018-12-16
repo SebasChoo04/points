@@ -7,6 +7,7 @@ import LinearGradient from "react-native-linear-gradient";
 import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "./actions";
 import firebase from 'react-native-firebase'
 import {NavigationActions, StackActions} from "react-navigation";
+import {Fonts} from './Constants'
 
 class ChooseHouse extends Component {
   constructor(props) {
@@ -107,7 +108,7 @@ class ChooseHouse extends Component {
               fontWeight: '600',
               fontSize: 30,
               color: 'white',
-              fontFamily: 'Avenir Next',
+              fontFamily: Fonts.REGULAR,
               textAlign: 'center'
             }}>
               What House Are You From?
@@ -178,7 +179,7 @@ class ChooseHouse extends Component {
                       marginLeft: 8
                     }}>
                       <Text style={{
-                        fontFamily: 'Avenir Next',
+                        fontFamily: Fonts.REGULAR,
                         fontSize: 30,
                       }}>
                         {item.key}
