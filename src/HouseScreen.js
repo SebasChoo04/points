@@ -148,7 +148,7 @@ class HouseScreen extends Component {
   render() {
     return (
         <View style={{
-          backgroundColor: '#white',
+          backgroundColor: 'white',
           flex: 1
         }}>
           <Svg style={{
