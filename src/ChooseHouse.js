@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Alert} from 'react-native'
 import {connect} from 'react-redux'
-import Svg from "react-native-svg";
-import Path from "react-native-svg/elements/Path";
-import LinearGradient from "react-native-linear-gradient";
+import Svg, {Path, LinearGradient, Stop} from "react-native-svg";
 import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "./actions";
 import firebase from 'react-native-firebase'
 import {NavigationActions, StackActions} from "react-navigation";
@@ -82,6 +80,10 @@ class ChooseHouse extends Component {
             height: this.state.height,
             width: this.state.width
           }}>
+            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="purple">
+              <Stop stopColor="#ba68c8" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#883997" stopOpacity="1" offset="100%"/>
+            </LinearGradient>
             <Path d={`
               M0 0
               L${this.state.width} 0
@@ -89,7 +91,7 @@ class ChooseHouse extends Component {
               M${this.state.width} ${this.state.height / 3}
               L${this.state.width} 0
               L0 ${this.state.height / 3}
-            `} fill={'#5F2998'}/>
+            `} fill={`url(#purple)`}/>
             <Path d={`
               M0 ${this.state.height / 3}
               C${this.state.width / 3} ${this.state.height / 4} ${this.state.width / 2} ${this.state.height / 2.5} ${this.state.width} ${this.state.height / 3}
@@ -97,7 +99,7 @@ class ChooseHouse extends Component {
             <Path d={`
               M${this.state.width} ${this.state.height / 3}
               S${this.state.width / 100 * 80} ${this.state.height / 2.6} ${this.state.width / 2.05} ${this.state.height / 3}
-            `} fill={'#5F2998'}/>
+            `} fill={'#883997'}/>
           </Svg>
           <SafeAreaView style={{
             flex: 1,
