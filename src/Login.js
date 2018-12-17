@@ -8,6 +8,7 @@ import {changeEmail, changeName, changeLoginStatus, resetAll, changeHouse} from 
 import * as Progress from 'react-native-progress';
 import firebase from 'react-native-firebase'
 import {StackActions, NavigationActions} from 'react-navigation'
+import {Fonts} from "./Constants";
 
 class Login extends Component {
   constructor(props) {
@@ -143,11 +144,11 @@ class Login extends Component {
             justifyContent: 'center',
           }}>
             <Text style={{
-              fontWeight: '600',
               fontSize: 50,
               color: 'white',
-              fontFamily: 'Avenir Next',
-              textAlign: 'center'
+              fontFamily: 'Raleway-Bold',
+              textAlign: 'center',
+              margin: 16,
             }}>
               Welcome to Points
             </Text>
@@ -163,8 +164,9 @@ class Login extends Component {
             }}>
               <Text style={{
                 fontSize: 20,
-                fontFamily: 'Avenir Next',
-                margin: 16
+                fontFamily: Fonts.MEDIUM,
+                margin: 16,
+                textAlign: 'center'
               }}>
                 To start your journey, please sign in with your SST Google Account
               </Text>

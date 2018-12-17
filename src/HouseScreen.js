@@ -63,8 +63,7 @@ class HouseScreen extends Component {
               }}>
                 <Text style={{
                   fontSize: 20,
-                  fontWeight: '600',
-                  fontFamily: Fonts.REGULAR
+                  fontFamily: 'Raleway-Bold'
                 }}>
                   {item.key}
                 </Text>
@@ -211,9 +210,8 @@ class HouseScreen extends Component {
                 }}
             />
             <Text style={{
-              fontFamily: Fonts.REGULAR,
+              fontFamily: 'Raleway-Bold',
               fontSize: 30,
-              fontWeight: '600',
               color: 'white',
               marginTop: 8
             }}>
