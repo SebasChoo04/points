@@ -126,6 +126,10 @@ class AnnouncementScreen extends React.Component {
         }}>
           <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()}
                     renderItem={({item}) => {
+                      String.prototype.replaceAll = function (str1, str2, ignore) {
+                        return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
+                      }
+                      const x = item.content.replaceAll("<br/>", `\n`)
                       return (
                           <View style={{
                             backgroundColor: this.tabBarColor(),
@@ -142,12 +146,48 @@ class AnnouncementScreen extends React.Component {
                             }}>
                               {item.title}
                             </Text>
-                            <Text style={{
-                              color: 'white',
-                              fontFamily: Fonts.REGULAR
+                            <Markdown
+                                rules={{
+                                  image: {
+                                    react: (node, output, state) => (
+                                        <Image
+                                            key={state.key}
+                                            source={{uri: node.target}}
+                                            style={{
+                                              height: 200,
+                                              width: this.state.width * 0.7,
+                                              overflow: 'hidden',
+                                              borderRadius: 10,
+                                            }}
+                                            resizeMode={'cover'}
+                                            borderRadius={10}
+                                        />
+                                    ),
+                                  },
+                                }} styles={{
+                              text: {
+                                color: 'white',
+                                fontFamily: Fonts.REGULAR
+                              },
+                              heading1: {
+                                color: 'white',
+                                fontFamily: Fonts.MEDIUM,
+                                fontSize: 25,
+                                fontWeight: '600'
+                              },
+                              strong: {
+                                fontWeight: 'bold',
+                                fontFamily: Fonts.REGULAR,
+                              },
+                              heading2: {
+                                color: 'white',
+                                fontFamily: Fonts.MEDIUM,
+                                fontSize: 20,
+                                fontWeight: '600'
+                              }
                             }}>
-                              {item.content}
-                            </Text>
+                              {x}
+                            </Markdown>
                           </View>
                       )
                     }}/>
