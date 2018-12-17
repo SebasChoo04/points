@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Alert} from 'react-native'
 import {connect} from 'react-redux'
-import Svg, {Path, LinearGradient, Stop} from "react-native-svg";
+import Svg, {Path, LinearGradient as SVGLinearGradient, Stop} from "react-native-svg";
+import LinearGradient from 'react-native-linear-gradient'
 import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "./actions";
 import firebase from 'react-native-firebase'
 import {NavigationActions, StackActions} from "react-navigation";
@@ -80,10 +81,10 @@ class ChooseHouse extends Component {
             height: this.state.height,
             width: this.state.width
           }}>
-            <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="purple">
+            <SVGLinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="purple">
               <Stop stopColor="#ba68c8" stopOpacity="1" offset="0%"/>
               <Stop stopColor="#883997" stopOpacity="1" offset="100%"/>
-            </LinearGradient>
+            </SVGLinearGradient>
             <Path d={`
               M0 0
               L${this.state.width} 0
