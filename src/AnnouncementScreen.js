@@ -146,25 +146,7 @@ class AnnouncementScreen extends React.Component {
                             }}>
                               {item.title}
                             </Text>
-                            <Markdown
-                                rules={{
-                                  image: {
-                                    react: (node, output, state) => (
-                                        <Image
-                                            key={state.key}
-                                            source={{uri: node.target}}
-                                            style={{
-                                              height: 200,
-                                              width: this.state.width * 0.7,
-                                              overflow: 'hidden',
-                                              borderRadius: 10,
-                                            }}
-                                            resizeMode={'cover'}
-                                            borderRadius={10}
-                                        />
-                                    ),
-                                  },
-                                }} styles={{
+                            <Markdown styles={{
                               text: {
                                 color: 'white',
                                 fontFamily: Fonts.REGULAR
@@ -233,25 +215,7 @@ class AnnouncementScreen extends React.Component {
                             }}>
                               {item.title}
                             </Text>
-                            <Markdown
-                                rules={{
-                                  image: {
-                                    react: (node, output, state) => (
-                                        <Image
-                                            key={state.key}
-                                            source={{uri: node.target}}
-                                            style={{
-                                              height: 200,
-                                              width: this.state.width * 0.7,
-                                              overflow: 'hidden',
-                                              borderRadius: 10,
-                                            }}
-                                            resizeMode={'cover'}
-                                            borderRadius={10}
-                                        />
-                                    ),
-                                  },
-                                }} styles={{
+                            <Markdown styles={{
                               text: {
                                 color: 'white',
                                 fontFamily: Fonts.REGULAR
@@ -271,7 +235,7 @@ class AnnouncementScreen extends React.Component {
                                 fontFamily: Fonts.MEDIUM,
                                 fontSize: 20,
                                 fontWeight: '600'
-                              }
+                              },
                             }}>
                               {x}
                             </Markdown>
