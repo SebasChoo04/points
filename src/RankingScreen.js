@@ -10,6 +10,7 @@ import {changeEmail, changeLoginStatus, changeName, resetAll} from "./actions";
 import {connect} from 'react-redux'
 import {Fonts} from "./Constants";
 import firebase from 'react-native-firebase';
+import * as Progress from "react-native-progress";
 
 class RankingScreen extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class RankingScreen extends React.Component {
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
       points: [],
+      loading: true
     }
     this.ref = firebase.firestore().collection('HouseInfo').doc('Points')
   }
@@ -30,6 +32,77 @@ class RankingScreen extends React.Component {
       this.setState({width, svgHeight: modHeight, height});
     })
   }
+  loading() {
+    if (this.state.loading){
+      return(
+        <View style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Progress.CircleSnail color={['red', 'green', 'blue', 'yellow', 'black']}/>
+        </View>
+      )
+    }
+    return(
+      <FlatList
+        data={this.state.points}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item, index}) => (
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: 26,
+            marginTop: 50,
+          }}>
+            <View style={{
+              flex: 1,
+            }}>
+              <LinearGradient useAngle={true} angleCenter={{x: 0.5, y: 0.5}} angle={45} colors={[item.house.toLowerCase(), 'white']}
+                              style={{
+                                height: 60,
+                                aspectRatio: 1,
+                                borderRadius: 30,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}>
+                <Text style={{
+                  fontFamily: 'Raleway-Medium',
+                  color: 'white',
+                  fontSize: 30,
+                }}>
+                  {index+1}
+                </Text>
+              </LinearGradient>
+            </View>
+            <View style={{
+              flex: 1,
+            }}>
+              <Text style={{
+                color: 'black',
+                fontSize: 25,
+                fontFamily: Fonts.REGULAR
+              }}>
+                {item.house}
+              </Text>
+            </View>
+            <View style={{
+              flex: 1,
+              marginRight: 20,
+            }}>
+              <Text style={{
+                color: 'black',
+                fontSize: 28,
+                fontFamily: 'Raleway-Bold',
+              }}>
+                {item.points} Points
+              </Text>
+            </View>
+          </View>
+        )}
+      />
+    )
+  }
   loadPoints() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.ref)
@@ -38,7 +111,13 @@ class RankingScreen extends React.Component {
       alert("An error has occurred, please contact Sebastian Choo")
       return {}
       }
-      this.setState({points: doc.data().all})
+      let x = doc.data().all
+      x.sort(function (a,b) {
+        return parseInt(b.points) - (a.points);
+      })
+      this.setState({points: doc.data().all}, () => {
+        this.setState({loading: false})
+        })
       transaction.update(this.ref, doc.data())
     })
   }
@@ -118,62 +197,7 @@ class RankingScreen extends React.Component {
         <View style={{
           flex: 1,
         }}>
-        <FlatList
-          data={this.state.points}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginLeft: 26,
-            marginTop: 50,
-          }}>
-            <View style={{
-              flex: 1,
-            }}>
-              <LinearGradient useAngle={true} angleCenter={{x: 0.5, y: 0.5}} angle={45} colors={[item.house.toLowerCase(), 'white']}
-                              style={{
-                                height: 60,
-                                aspectRatio: 1,
-                                borderRadius: 30,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}>
-                <Text style={{
-                fontFamily: 'Raleway-Medium',
-                color: 'white',
-                fontSize: 30,
-                }}>
-                  0
-                </Text>
-              </LinearGradient>
-            </View>
-            <View style={{
-              flex: 1,
-            }}>
-              <Text style={{
-              color: 'black',
-              fontSize: 25,
-              fontFamily: Fonts.REGULAR
-              }}>
-              {item.house}
-              </Text>
-            </View>
-            <View style={{
-              flex: 1,
-              marginRight: 20,
-            }}>
-              <Text style={{
-              color: 'black',
-              fontSize: 28,
-              fontFamily: 'Raleway-Bold',
-              }}>
-              {item.points} Points
-              </Text>
-            </View>
-          </View>
-          )}
-        />
+          {this.loading()}
         </View>
       </View>
     );
