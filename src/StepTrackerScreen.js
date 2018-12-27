@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Dimensions} from 'react-native';
-import {SafeAreaView, Text, TouchableOpacity, Platform} from 'react-native'
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native'
 import {NavigationActions, StackActions} from "react-navigation";
 import {connect} from 'react-redux'
 import {resetAll} from "./actions";
@@ -98,26 +98,18 @@ class StepTrackerScreen extends React.Component {
         if (err) {
           throw err;
         }
-        alert(JSON.stringify(res));
+        this.setState({steps: res[1].steps})
       });
     })
   }
 
-  healthKit() {
-
-  }
-
   componentDidMount() {
-    if (Platform.OS === 'ios') {
-      this.healthKit()
-    } else {
-      this.googleFit()
-    }
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       const modHeight = height / 3;
       this.setState({width, svgHeight: modHeight, height});
     });
+    this.googleFit()
   }
 
   render() {
