@@ -3,6 +3,7 @@ package com.pointsrn;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.googlefit.GoogleFitPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new GoogleFitPackage(BuildConfig.APPLICATION_ID),
             new LinearGradientPackage(),
             new SvgPackage(),
             new VectorIconsPackage(),

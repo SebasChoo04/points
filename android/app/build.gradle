@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-fit')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-svg')
     implementation project(':react-native-vector-icons')

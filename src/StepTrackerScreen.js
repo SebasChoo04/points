@@ -1,5 +1,6 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View, Dimensions} from 'react-native';
+import {View, Dimensions} from 'react-native';
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native'
 import {NavigationActions, StackActions} from "react-navigation";
 import {connect} from 'react-redux'
 import {resetAll} from "./actions";
@@ -11,6 +12,7 @@ import Svg, {
 } from "react-native-svg";
 import {Fonts} from "./Constants";
 import firebase from 'react-native-firebase'
+import GoogleFit from 'react-native-google-fit'
 
 class StepTrackerScreen extends React.Component {
   constructor(props){
@@ -77,13 +79,27 @@ class StepTrackerScreen extends React.Component {
         return '#B68C3B'
     }
   }
+  googleFit(){
+    const qinguan = new Date();
+    qinguan.setHours(0,0,0,0)
+    let options = {
+      startDate: qinguan.toISOString(),
+      endDate: new Date().toISOString() // required ISO8601Timestamp
+    };
+    GoogleFit.getDailyStepCountSamples(options, (err, res) => {
+      if (err) {
+        throw err;
+      }
+      alert(res);
+    });
+  }
   componentDidMount() {
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       const modHeight = height / 3;
       this.setState({width, svgHeight: modHeight, height});
     });
-    alert(new Date())
+    this.googleFit()
   }
   render() {
     return (
@@ -163,9 +179,22 @@ class StepTrackerScreen extends React.Component {
               arcSweepAngle={240}
               rotation={240}
               lineCap="round">
+              {() => (
+                <View style={{
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    color: 'black',
+                    fontSize: 36,
+                    fontFamily: 'Raleway-Bold',
+                  }}>
+                    {this.state.steps} steps
+                  </Text>
+                </View>
+              )}
             </AnimatedCircularProgress>
             <Text style={{
-              marginTop: 20,
               fontFamily: Fonts.REGULAR,
               fontSize: 30,
               fontWeight: '400',
@@ -177,23 +206,31 @@ class StepTrackerScreen extends React.Component {
               fontFamily: 'Raleway-Bold',
               fontSize: 20,
               textAlign: 'center',
-              marginTop: 40,
+              marginTop: 30,
             }}>
-              Points accumulated this month: 100
+              Points contributed this month: 100 {"\n"}
+              Points gained by House: 10
             </Text>
+            <TouchableOpacity
+              style={{
+                marginTop: 25
+              }}
+              onPress={() => {
+              this.props.resetAll();
+              const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({routeName: "Splitter"})],
+              });
+              this.props.navigation.dispatch(resetAction);
+            }}>
+              <Text style={{
+                fontFamily: Fonts.MEDIUM,
+                fontSize: 20
+              }}>
+                Sign Out
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => {
-            this.props.resetAll();
-            const resetAction = StackActions.reset({
-              index: 0,
-              actions: [NavigationActions.navigate({routeName: "Splitter"})],
-            });
-            this.props.navigation.dispatch(resetAction);
-          }}>
-            <Text>
-              Sign Out
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
