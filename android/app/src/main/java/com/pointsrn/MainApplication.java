@@ -7,15 +7,23 @@ import com.reactnative.googlefit.GoogleFitPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
+
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
+
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+
 import io.invertase.firebase.RNFirebasePackage;
+
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
+
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
+
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+
 import io.invertase.firebase.RNFirebasePackage;
+
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -48,11 +56,11 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-            new GoogleFitPackage(BuildConfig.APPLICATION_ID),
-            new LinearGradientPackage(),
-            new SvgPackage(),
-            new VectorIconsPackage(),
-            new RNGestureHandlerPackage(),
+                    new GoogleFitPackage(BuildConfig.APPLICATION_ID),
+                    new LinearGradientPackage(),
+                    new SvgPackage(),
+                    new VectorIconsPackage(),
+                    new RNGestureHandlerPackage(),
                     new RNFirebasePackage(),
                     new RNGoogleSigninPackage(),
                     new RNFirebaseAuthPackage(),

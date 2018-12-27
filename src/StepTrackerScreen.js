@@ -15,9 +15,9 @@ import firebase from 'react-native-firebase'
 import GoogleFit from 'react-native-google-fit'
 
 class StepTrackerScreen extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
@@ -25,18 +25,18 @@ class StepTrackerScreen extends React.Component {
     }
     this.firebaseRef = firebase.firestore().collection('pedometer').doc('points')
   }
-  
-  updatePoints(){
+
+  updatePoints() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRef)
-      if (!doc.exists){
+      if (!doc.exists) {
         transaction.set(this.ref, {Error: "Invalid doc in StepTracker.js"})
         alert("An error has occurred, please contact Sebastian Choo")
       }
       transaction.update(this.firebaseRef, {})
     })
   }
-  
+
   bottomCurveColor() {
     switch (this.props.userDetailsReducer.house) {
       case 'Red':
@@ -51,22 +51,24 @@ class StepTrackerScreen extends React.Component {
         return "#0093c4"
     }
   }
-  color(){
+
+  color() {
     switch (this.props.userDetailsReducer.house) {
       case 'Black':
         return '#000000';
       case 'Red':
         return '#EE220C';
       case 'Green':
-        return'#009801';
+        return '#009801';
       case 'Blue':
         return '#00A2FF';
       case 'Yellow':
         return '#FAE232'
     }
   }
-  backgroundColor(){
-    switch (this.props.userDetailsReducer.house){
+
+  backgroundColor() {
+    switch (this.props.userDetailsReducer.house) {
       case 'Black':
         return '#2A2A2A';
       case 'Red':
@@ -79,20 +81,28 @@ class StepTrackerScreen extends React.Component {
         return '#B68C3B'
     }
   }
-  googleFit(){
+
+  googleFit() {
     const qinguan = new Date();
-    qinguan.setHours(0,0,0,0)
+    qinguan.setHours(0, 0, 0, 0)
     let options = {
       startDate: qinguan.toISOString(),
       endDate: new Date().toISOString() // required ISO8601Timestamp
     };
-    GoogleFit.getDailyStepCountSamples(options, (err, res) => {
-      if (err) {
-        throw err;
-      }
-      alert(res);
-    });
+    GoogleFit.authorize()
+    GoogleFit.onAuthorizeFailure(() => {
+      alert('An error occurred')
+    })
+    GoogleFit.onAuthorize(() => {
+      GoogleFit.getDailyStepCountSamples(options, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        alert(JSON.stringify(res));
+      });
+    })
   }
+
   componentDidMount() {
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
@@ -101,35 +111,36 @@ class StepTrackerScreen extends React.Component {
     });
     this.googleFit()
   }
+
   render() {
     return (
-      <View style={{flex: 1}}>
-        <Svg style={{
-          position: 'absolute',
-          height: this.state.height,
-          width: this.state.width,
-        }}>
-          <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
-            <Stop stopColor="#4fc3f7" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#0093c4" stopOpacity="1" offset="100%"/>
-          </SVG>
-          <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="red">
-            <Stop stopColor="#e57373" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#af4448" stopOpacity="1" offset="100%"/>
-          </SVG>
-          <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="green">
-            <Stop stopColor="#81c784" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#519657" stopOpacity="1" offset="100%"/>
-          </SVG>
-          <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="yellow">
-            <Stop stopColor="#fff176" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#fdd835" stopOpacity="1" offset="100%"/>
-          </SVG>
-          <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="black">
-            <Stop stopColor="#616161" stopOpacity="1" offset="0%"/>
-            <Stop stopColor="#373737" stopOpacity="1" offset="100%"/>
-          </SVG>
-          <Path d={`
+        <View style={{flex: 1}}>
+          <Svg style={{
+            position: 'absolute',
+            height: this.state.height,
+            width: this.state.width,
+          }}>
+            <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="blue">
+              <Stop stopColor="#4fc3f7" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#0093c4" stopOpacity="1" offset="100%"/>
+            </SVG>
+            <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="red">
+              <Stop stopColor="#e57373" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#af4448" stopOpacity="1" offset="100%"/>
+            </SVG>
+            <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="green">
+              <Stop stopColor="#81c784" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#519657" stopOpacity="1" offset="100%"/>
+            </SVG>
+            <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="yellow">
+              <Stop stopColor="#fff176" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#fdd835" stopOpacity="1" offset="100%"/>
+            </SVG>
+            <SVG x1="50%" y1="0%" x2="50%" y2="100%" id="black">
+              <Stop stopColor="#616161" stopOpacity="1" offset="0%"/>
+              <Stop stopColor="#373737" stopOpacity="1" offset="100%"/>
+            </SVG>
+            <Path d={`
               M0 0
               L${this.state.width} 0
               L0 ${this.state.svgHeight / 3}
@@ -137,102 +148,103 @@ class StepTrackerScreen extends React.Component {
               L${this.state.width} 0
               L0 ${this.state.svgHeight / 3}
             `} fill={`url(#${this.props.userDetailsReducer.house.toLowerCase()})`}/>
-          <Path d={`
+            <Path d={`
                 M-5 ${this.state.svgHeight / 3 + 1}
                 C${this.state.width / 3} ${this.state.svgHeight / 4} ${this.state.width / 2} ${this.state.svgHeight / 2.5} ${this.state.width} ${this.state.svgHeight / 3 + 1}
                 `} fill={'white'}/>
-          <Path d={`
+            <Path d={`
                 M${this.state.width + 5} ${this.state.svgHeight / 3 - 1}
                 S${this.state.width / 100 * 80} ${this.state.svgHeight / 2.5} ${this.state.width / 2.2} ${this.state.svgHeight / 3 - 1}
                 `} fill={this.bottomCurveColor()}/>
-        </Svg>
-        <SafeAreaView style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: this.state.svgHeight / 3,
-        }}>
-          <Text style={{
-            color: 'white',
-            fontFamily: Fonts.MEDIUM,
-            fontSize: 20
+          </Svg>
+          <SafeAreaView style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: this.state.svgHeight / 3,
           }}>
-            Step Tracker
-          </Text>
-        </SafeAreaView>
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-        }}>
+            <Text style={{
+              color: 'white',
+              fontFamily: Fonts.MEDIUM,
+              fontSize: 20
+            }}>
+              Step Tracker
+            </Text>
+          </SafeAreaView>
           <View style={{
             flex: 1,
-            marginTop: 80,
-            alignItems: 'center'
+            alignItems: 'center',
           }}>
-            <AnimatedCircularProgress
-              size={250}
-              width={20}
-              backgroundWidth={10}
-              fill={this.state.steps/100}
-              tintColor={this.color()}
-              backgroundColor={this.backgroundColor()}
-              arcSweepAngle={240}
-              rotation={240}
-              lineCap="round">
-              {() => (
-                <View style={{
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Text style={{
-                    color: 'black',
-                    fontSize: 36,
-                    fontFamily: 'Raleway-Bold',
-                  }}>
-                    {this.state.steps} steps
-                  </Text>
-                </View>
-              )}
-            </AnimatedCircularProgress>
-            <Text style={{
-              fontFamily: Fonts.REGULAR,
-              fontSize: 30,
-              fontWeight: '400',
-              textAlign: 'center'
+            <View style={{
+              flex: 1,
+              marginTop: 80,
+              alignItems: 'center'
             }}>
-              Congratulations, you have walked {this.state.steps} steps today, you are {10000-this.state.steps} steps away from earning one point.
-            </Text>
-            <Text style={{
-              fontFamily: 'Raleway-Bold',
-              fontSize: 20,
-              textAlign: 'center',
-              marginTop: 30,
-            }}>
-              Points contributed this month: 100 {"\n"}
-              Points gained by House: 10
-            </Text>
-            <TouchableOpacity
-              style={{
-                marginTop: 25
-              }}
-              onPress={() => {
-              this.props.resetAll();
-              const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({routeName: "Splitter"})],
-              });
-              this.props.navigation.dispatch(resetAction);
-            }}>
+              <AnimatedCircularProgress
+                  size={250}
+                  width={20}
+                  backgroundWidth={10}
+                  fill={this.state.steps / 100}
+                  tintColor={this.color()}
+                  backgroundColor={this.backgroundColor()}
+                  arcSweepAngle={240}
+                  rotation={240}
+                  lineCap="round">
+                {() => (
+                    <View style={{
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Text style={{
+                        color: 'black',
+                        fontSize: 36,
+                        fontFamily: 'Raleway-Bold',
+                      }}>
+                        {this.state.steps} steps
+                      </Text>
+                    </View>
+                )}
+              </AnimatedCircularProgress>
               <Text style={{
-                fontFamily: Fonts.MEDIUM,
-                fontSize: 20
+                fontFamily: Fonts.REGULAR,
+                fontSize: 30,
+                fontWeight: '400',
+                textAlign: 'center'
               }}>
-                Sign Out
+                Congratulations, you have walked {this.state.steps} steps today, you
+                are {10000 - this.state.steps} steps away from earning one point.
               </Text>
-            </TouchableOpacity>
+              <Text style={{
+                fontFamily: 'Raleway-Bold',
+                fontSize: 20,
+                textAlign: 'center',
+                marginTop: 30,
+              }}>
+                Points contributed this month: 100 {"\n"}
+                Points gained by House: 10
+              </Text>
+              <TouchableOpacity
+                  style={{
+                    marginTop: 25
+                  }}
+                  onPress={() => {
+                    this.props.resetAll();
+                    const resetAction = StackActions.reset({
+                      index: 0,
+                      actions: [NavigationActions.navigate({routeName: "Splitter"})],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                  }}>
+                <Text style={{
+                  fontFamily: Fonts.MEDIUM,
+                  fontSize: 20
+                }}>
+                  Sign Out
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
     );
   }
 }
@@ -245,4 +257,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetAll: () => dispatch(resetAll())
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(StepTrackerScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(StepTrackerScreen)
