@@ -21,7 +21,7 @@ class StepTrackerScreen extends React.Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
-      steps: 1000,
+      steps: 240,
     }
     this.firebaseRef = firebase.firestore().collection('pedometer').doc('points')
   }
@@ -83,11 +83,13 @@ class StepTrackerScreen extends React.Component {
   }
 
   googleFit() {
-    const qinguan = new Date();
-    qinguan.setHours(0, 0, 0, 0)
+    const start = new Date();
+    start.setHours(0, 0, 0, 0)
+    const end = new Date()
+    end.setHours(23, 59, 59, 999)
     let options = {
-      startDate: qinguan.toISOString(),
-      endDate: new Date().toISOString() // required ISO8601Timestamp
+      startDate: start.toISOString(),
+      endDate: end.toISOString()
     };
     GoogleFit.authorize()
     GoogleFit.onAuthorizeFailure(() => {
@@ -98,7 +100,7 @@ class StepTrackerScreen extends React.Component {
         if (err) {
           throw err;
         }
-        this.setState({steps: res[1].steps})
+        this.setState({steps: res[0].steps[0].value})
       });
     })
   }
@@ -110,6 +112,10 @@ class StepTrackerScreen extends React.Component {
       this.setState({width, svgHeight: modHeight, height});
     });
     this.googleFit()
+  }
+
+  componentWillUnmount(): void {
+    GoogleFit.removeListeners()
   }
 
   render() {
