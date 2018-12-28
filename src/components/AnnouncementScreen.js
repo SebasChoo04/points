@@ -13,13 +13,13 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import {connect} from 'react-redux'
-import {changeEmail, changeLoginStatus, changeName, resetAll, changeAllEggCount} from "./actions";
+import {changeEmail, changeLoginStatus, changeName, resetAll, changeAllEggCount} from "../actions";
 import Svg, {
   Path,
   LinearGradient,
   Stop
 } from "react-native-svg";
-import {Fonts} from "./Constants";
+import {Fonts} from "../Constants";
 import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Progress from "react-native-progress";
 import Markdown from 'react-native-simple-markdown'

@@ -6,9 +6,9 @@ import Svg, {
   LinearGradient as SVG,
   Stop
 } from "react-native-svg";
-import {changeEmail, changeLoginStatus, changeName, resetAll} from "./actions";
+import {changeEmail, changeLoginStatus, changeName, resetAll} from "../actions";
 import {connect} from 'react-redux'
-import {Fonts} from "./Constants";
+import {Fonts} from "../Constants";
 import firebase from 'react-native-firebase';
 import * as Progress from "react-native-progress";
 

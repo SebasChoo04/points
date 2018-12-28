@@ -2,19 +2,19 @@ import React from 'react';
 import {createBottomTabNavigator, createAppContainer, createStackNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon2 from 'react-native-vector-icons/FontAwesome'
-import HouseScreen from "./HouseScreen"
-import AnnouncementScreen from "./AnnouncementScreen"
-import RankingScreen from "./RankingScreen"
-import StepTrackerScreen from "./StepTrackerScreen"
-import Login from "./Login";
-import ChooseHouse from "./ChooseHouse";
 import Splitter from "./Splitter";
+import HouseContainer from "./containers/HouseContainer";
+import AnnouncementContainer from "./containers/AnnouncementContainer";
+import RankingContainer from "./containers/RankingContainer";
+import StepTrackerContainer from "./containers/StepTrackerContainer";
+import ChooseHouseContainer from "./containers/ChooseHouseContainer";
+import LoginContainer from "./containers/LoginContainer";
 
 const TabNavigator = createBottomTabNavigator({
-  "House": {screen: HouseScreen},
-  "Announcements": {screen: AnnouncementScreen},
-  "Rankings": {screen: RankingScreen},
-  "Steps": {screen: StepTrackerScreen}
+  "House": {screen: HouseContainer},
+  "Announcements": {screen: AnnouncementContainer},
+  "Rankings": {screen: RankingContainer},
+  "Steps": {screen: StepTrackerContainer}
 }, {
   defaultNavigationOptions: ({navigation}) => ({
     tabBarIcon: () => {
@@ -43,8 +43,8 @@ const TabNavigator = createBottomTabNavigator({
 
 const Main = createStackNavigator({
   Splitter: {screen: Splitter},
-  ChooseHouse: {screen: ChooseHouse},
-  Login: {screen: Login},
+  ChooseHouse: {screen: ChooseHouseContainer},
+  Login: {screen: LoginContainer},
   Tab: {screen: TabNavigator},
 }, {
   headerMode: 'none'

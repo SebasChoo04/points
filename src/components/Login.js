@@ -4,11 +4,11 @@ import Svg, {Path, LinearGradient, Stop} from "react-native-svg";
 import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google-signin";
 import {GoogleApiAvailabilityType} from "react-native-firebase";
 import {connect} from 'react-redux'
-import {changeEmail, changeName, changeLoginStatus, resetAll, changeHouse} from "./actions";
+import {changeEmail, changeName, changeLoginStatus, resetAll, changeHouse} from "../actions";
 import * as Progress from 'react-native-progress';
 import firebase from 'react-native-firebase'
 import {StackActions, NavigationActions} from 'react-navigation'
-import {Fonts} from "./Constants";
+import {Fonts} from "../Constants";
 
 class Login extends Component {
   constructor(props) {

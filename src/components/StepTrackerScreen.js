@@ -3,17 +3,18 @@ import {View, Dimensions} from 'react-native';
 import {SafeAreaView, Text, TouchableOpacity, Platform} from 'react-native'
 import {NavigationActions, StackActions} from "react-navigation";
 import {connect} from 'react-redux'
-import {resetAll} from "./actions";
+import {resetAll} from "../actions";
 import {AnimatedCircularProgress} from 'react-native-circular-progress'
 import Svg, {
   Path,
   LinearGradient as SVG,
   Stop
 } from "react-native-svg";
-import {Fonts} from "./Constants";
+import {Fonts} from "../Constants";
 import firebase from 'react-native-firebase'
 import GoogleFit from 'react-native-google-fit'
 import AppleHealthKit from 'rn-apple-healthkit'
+import {GoogleSignin} from "react-native-google-signin";
 
 class StepTrackerScreen extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class StepTrackerScreen extends React.Component {
     }
     this.firebaseRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.house.toLowerCase())
   }
-  
+
   updatePoints() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRef)
@@ -37,7 +38,7 @@ class StepTrackerScreen extends React.Component {
       transaction.update(this.firebaseRef, [])
     })
   }
-  
+
   bottomCurveColor() {
     switch (this.props.userDetailsReducer.house) {
       case 'Red':
@@ -52,7 +53,7 @@ class StepTrackerScreen extends React.Component {
         return "#0093c4"
     }
   }
-  
+
   color() {
     switch (this.props.userDetailsReducer.house) {
       case 'Black':
@@ -67,7 +68,7 @@ class StepTrackerScreen extends React.Component {
         return '#FAE232'
     }
   }
-  
+
   backgroundColor() {
     switch (this.props.userDetailsReducer.house) {
       case 'Black':
@@ -82,7 +83,7 @@ class StepTrackerScreen extends React.Component {
         return '#B68C3B'
     }
   }
-  
+
   googleFit() {
     const start = new Date();
     start.setHours(0, 0, 0, 0)
@@ -105,7 +106,7 @@ class StepTrackerScreen extends React.Component {
       });
     })
   }
-  
+
   healthKit() {
     let options = {
       permissions: {
@@ -129,10 +130,10 @@ class StepTrackerScreen extends React.Component {
         }
         this.setState({steps: results.value})
       });
-  
+
     });
   }
-  
+
   componentDidMount() {
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
@@ -156,7 +157,7 @@ class StepTrackerScreen extends React.Component {
       GoogleFit.removeListeners()
     }
   }
-  
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -272,6 +273,7 @@ class StepTrackerScreen extends React.Component {
                 marginTop: 40
               }}
               onPress={() => {
+                GoogleSignin.signOut()
                 this.props.resetAll();
                 const resetAction = StackActions.reset({
                   index: 0,

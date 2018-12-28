@@ -3,10 +3,10 @@ import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Alert}
 import {connect} from 'react-redux'
 import Svg, {Path, LinearGradient as SVGLinearGradient, Stop} from "react-native-svg";
 import LinearGradient from 'react-native-linear-gradient'
-import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "./actions";
+import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "../actions";
 import firebase from 'react-native-firebase'
 import {NavigationActions, StackActions} from "react-navigation";
-import {Fonts} from './Constants'
+import {Fonts} from '../Constants'
 
 class ChooseHouse extends Component {
   constructor(props) {

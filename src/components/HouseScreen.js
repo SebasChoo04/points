@@ -8,10 +8,10 @@ import Svg, {
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import {connect} from 'react-redux'
-import {changeEmail, changeLoginStatus, changeName, resetAll} from './actions'
+import {changeEmail, changeLoginStatus, changeName, resetAll} from '../actions'
 import firebase from 'react-native-firebase'
 import * as Progress from "react-native-progress";
-import {Fonts} from "./Constants";
+import {Fonts} from "../Constants";
 
 YellowBox.ignoreWarnings(['source.uri'])
 
@@ -79,7 +79,7 @@ class HouseScreen extends Component {
     )
   }
 
-  async getFirebaseData() {
+  getFirebaseData() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRef)
       if (!doc.exists) {
