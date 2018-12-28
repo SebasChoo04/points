@@ -6,8 +6,6 @@ import Svg, {
   LinearGradient as SVG,
   Stop
 } from "react-native-svg";
-import {changeEmail, changeLoginStatus, changeName, resetAll} from "../actions";
-import {connect} from 'react-redux'
 import {Fonts} from "../Constants";
 import firebase from 'react-native-firebase';
 import * as Progress from "react-native-progress";
@@ -204,15 +202,4 @@ class RankingScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(RankingScreen)
+export default RankingScreen

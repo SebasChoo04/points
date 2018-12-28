@@ -40,3 +40,10 @@ export function changeAllEggCount(count) {
     count
   }
 }
+
+export function changeSteps(steps) {
+  return {
+    type: redux.USER_STEPS,
+    steps
+  }
+}

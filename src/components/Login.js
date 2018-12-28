@@ -2,9 +2,6 @@ import React, {Component} from 'react'
 import {View, Text, Dimensions, SafeAreaView, Image} from 'react-native'
 import Svg, {Path, LinearGradient, Stop} from "react-native-svg";
 import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google-signin";
-import {GoogleApiAvailabilityType} from "react-native-firebase";
-import {connect} from 'react-redux'
-import {changeEmail, changeName, changeLoginStatus, resetAll, changeHouse} from "../actions";
 import * as Progress from 'react-native-progress';
 import firebase from 'react-native-firebase'
 import {StackActions, NavigationActions} from 'react-navigation'
@@ -183,16 +180,4 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll()),
-  changeHouse: house => dispatch(changeHouse(house))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default Login

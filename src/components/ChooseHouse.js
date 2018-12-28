@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text, SafeAreaView, Dimensions, FlatList, TouchableOpacity, Alert} from 'react-native'
-import {connect} from 'react-redux'
 import Svg, {Path, LinearGradient as SVGLinearGradient, Stop} from "react-native-svg";
 import LinearGradient from 'react-native-linear-gradient'
-import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "../actions";
 import firebase from 'react-native-firebase'
 import {NavigationActions, StackActions} from "react-navigation";
 import {Fonts} from '../Constants'
@@ -197,16 +195,4 @@ class ChooseHouse extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll()),
-  changeHouse: house => dispatch(changeHouse(house))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChooseHouse)
+export default ChooseHouse

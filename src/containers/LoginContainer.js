@@ -1,13 +1,18 @@
 import React, {Component} from 'react'
-import {View, Text} from 'react-native'
 import Login from "../components/Login";
+import {connect} from 'react-redux'
+import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll} from "../actions";
 
-class LoginContainer extends Component {
-  render() {
-    return (
-        <Login/>
-    )
-  }
+const mapStateToProps = (state) => {
+  return state
 }
 
-export default LoginContainer
+const mapDispatchToProps = (dispatch) => ({
+  changeEmail: email => dispatch(changeEmail(email)),
+  changeName: name => dispatch(changeName(name)),
+  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
+  resetAll: () => dispatch(resetAll()),
+  changeHouse: house => dispatch(changeHouse(house))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

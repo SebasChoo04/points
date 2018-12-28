@@ -7,8 +7,6 @@ import Svg, {
 } from "react-native-svg";
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
-import {connect} from 'react-redux'
-import {changeEmail, changeLoginStatus, changeName, resetAll} from '../actions'
 import firebase from 'react-native-firebase'
 import * as Progress from "react-native-progress";
 import {Fonts} from "../Constants";
@@ -228,15 +226,4 @@ class HouseScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(HouseScreen)
+export default HouseScreen

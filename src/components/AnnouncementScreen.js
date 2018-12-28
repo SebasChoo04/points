@@ -12,8 +12,6 @@ import {
   Image
 } from 'react-native';
 import firebase from 'react-native-firebase';
-import {connect} from 'react-redux'
-import {changeEmail, changeLoginStatus, changeName, resetAll, changeAllEggCount} from "../actions";
 import Svg, {
   Path,
   LinearGradient,
@@ -444,17 +442,5 @@ getFirebaseDataAll() {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
 
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll()),
-  changeAllEggCount: (count) => dispatch(changeAllEggCount(count))
-})
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnnouncementScreen)
+export default AnnouncementScreen
