@@ -4,8 +4,8 @@ export const redux = {
   USER_NAME: 'username',
   USER_LOGIN_STATUS: 'userloginstatus',
   USER_HOUSE: 'userhouse',
+  USER_STEPS: 'usersteps',
   ALL_EGG: 'eggsebasdoesntknowabout',
-  USER_STEPS: "steps"
 }
 
 export const Fonts = {

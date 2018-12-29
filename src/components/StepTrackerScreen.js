@@ -13,8 +13,6 @@ import firebase from 'react-native-firebase'
 import GoogleFit from 'react-native-google-fit'
 import AppleHealthKit from 'rn-apple-healthkit'
 import {GoogleSignin} from "react-native-google-signin";
-import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll, changeSteps} from "../actions";
-import {connect} from 'react-redux'
 
 class StepTrackerScreen extends React.Component {
   constructor(props) {
@@ -23,20 +21,9 @@ class StepTrackerScreen extends React.Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
-      steps: 0,
     }
-    this.firebaseRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.house.toLowerCase())
-  }
-
-  updatePoints() {
-    firebase.firestore().runTransaction(async transaction => {
-      const doc = await transaction.get(this.firebaseRef)
-      if (!doc.exists) {
-        transaction.set(this.ref, {Error: "Invalid doc in StepTracker.js"})
-        alert("An error has occurred, please contact Sebastian Choo")
-      }
-      transaction.update(this.firebaseRef, [])
-    })
+    this.pedoRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.email)
+    this.pedoHouseRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.house.toLowerCase())
   }
 
   bottomCurveColor() {
@@ -107,11 +94,52 @@ class StepTrackerScreen extends React.Component {
     })
   }
 
+  updateStepCount(steps) {
+    this.props.changeSteps(steps)
+    this.updateFirebaseData(2, 9000)
+  }
+
+  updateFirebaseData(points, steps) {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.pedoRef)
+      if (!doc.exists) {
+        var j = []
+        j.push({total: steps, updateTime: new Date()})
+        j.push({date: new Date().toDateString(), data: [{steps, points, time: new Date()}]})
+        transaction.set(this.pedoRef, {data: j})
+        return
+      }
+      const x = doc.data().data.slice(0)
+      const e = new Date().toDateString()
+      var jj = false
+      for (var z in x) {
+        const res = x[z]
+        Object.keys(res).forEach((i) => {
+          if (i == 'date') {
+            if (res.date == e) {
+              jj = true
+              const oldSteps = res['data'][res['data'].length - 1].steps
+              const updated = steps - oldSteps
+              x[0].total += updated
+              x[0].updateTime = new Date()
+              res.data.push({steps, points, time: new Date()})
+              return
+            }
+          }
+        })
+      }
+      if (!jj) {
+        x.push({date: new Date().toDateString(), data: [{steps, points, time: new Date()}]})
+      }
+      transaction.update(this.pedoRef, {data: x})
+    })
+  }
+
   healthKit() {
     let options = {
       permissions: {
         read: ["StepCount"],
-        write: []
+        write: ["StepCount"]
       }
     };
     AppleHealthKit.initHealthKit(options, (err, results) => {
@@ -133,8 +161,18 @@ class StepTrackerScreen extends React.Component {
   iosGetStep() {
     AppleHealthKit.getStepCount(null, (err, results) => {
       if (err) {
-        return
+        AppleHealthKit.saveSteps({
+          value: 1,
+          startDate: new Date().toISOString(),
+          endDate: new Date().toISOString()
+        }, (err, res) => {
+          if (err) {
+            alert('An error occurred')
+            return
+          }
+        })
       }
+      this.updateStepCount(results.value)
       this.setState({steps: results.value})
     });
   }
@@ -153,8 +191,8 @@ class StepTrackerScreen extends React.Component {
   }
 
   message() {
-    if (this.state.steps < 10000) {
-      return `You are ${10000 - this.state.steps} steps away from earning one point.`
+    if (this.props.userDetailsReducer.steps < 10000) {
+      return `You are ${10000 - this.props.userDetailsReducer.steps} steps away from earning one point.`
     }
     return `You have accomplished the 10000 daily step count.`
   }
@@ -239,7 +277,7 @@ class StepTrackerScreen extends React.Component {
                   size={250}
                   width={20}
                   backgroundWidth={10}
-                  fill={this.state.steps / 100}
+                  fill={this.props.userDetailsReducer.steps / 100}
                   tintColor={this.color()}
                   backgroundColor={this.backgroundColor()}
                   arcSweepAngle={240}
@@ -255,7 +293,7 @@ class StepTrackerScreen extends React.Component {
                         fontSize: 36,
                         fontFamily: 'Raleway-Bold',
                       }}>
-                        {this.state.steps} steps
+                        {this.props.userDetailsReducer.steps} steps
                       </Text>
                     </View>
                 )}
@@ -304,17 +342,4 @@ class StepTrackerScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  changeEmail: email => dispatch(changeEmail(email)),
-  changeName: name => dispatch(changeName(name)),
-  changeLoginStatus: loginStatus => dispatch(changeLoginStatus(loginStatus)),
-  resetAll: () => dispatch(resetAll()),
-  changeHouse: house => dispatch(changeHouse(house)),
-  changeSteps: steps => dispatch(changeSteps(steps))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(StepTrackerScreen)
+export default StepTrackerScreen

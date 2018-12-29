@@ -22,7 +22,7 @@ export function userDetailsReducer(state = initialUserInfo, action) {
     case redux.ALL_EGG:
       return Object.assign({}, state, {count: action.count})
     case redux.USER_STEPS:
-      return Object.assign({}, state, {count: action.steps})
+      return Object.assign({}, state, {steps: action.steps})
     default:
       return state
   }
