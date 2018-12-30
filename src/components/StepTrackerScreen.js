@@ -96,7 +96,7 @@ class StepTrackerScreen extends React.Component {
 
   updateStepCount(steps) {
     this.props.changeSteps(steps)
-    this.updateFirebaseData(2, 9000)
+    this.updateFirebaseData(2, this.props.userDetailsReducer.steps)
   }
 
   updateFirebaseData(points, steps) {
