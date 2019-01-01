@@ -17,10 +17,12 @@ import Svg, {
   LinearGradient,
   Stop
 } from "react-native-svg";
-import {Fonts} from "../Constants";
+import {Fonts, access} from "../Constants";
 import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Progress from "react-native-progress";
 import Markdown from 'react-native-simple-markdown'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import Modal from "react-native-modal";
 
 class AnnouncementScreen extends React.Component {
   constructor(props) {
@@ -46,6 +48,7 @@ class AnnouncementScreen extends React.Component {
       },
       houseRefreshing: false,
       allRefreshing: false,
+      addIsVisible: false
     }
     this.firebaseRef = firebase.firestore().collection('announcements').doc(this.props.userDetailsReducer.house.toLowerCase())
     this.firebaseRefAll = firebase.firestore().collection('announcements').doc('everyone')
@@ -78,7 +81,15 @@ class AnnouncementScreen extends React.Component {
   }
 
   renderPostButton() {
-
+    if (this.props.userDetailsReducer.access != access.student) {
+      return (
+          <TouchableOpacity style={{
+            marginRight: 16
+          }} onPress={() => this.setState({addIsVisible: !this.state.addIsVisible})}>
+            <Icon name={'add'} color={'white'} size={25}/>
+          </TouchableOpacity>
+      )
+    }
   }
 
   getFirebaseDataAll() {
@@ -315,21 +326,36 @@ class AnnouncementScreen extends React.Component {
             {/*M${this.state.width + 5} ${this.state.svgHeight / 3 - 1}*/}
             {/*S${this.state.width / 100 * 80} ${this.state.svgHeight / 2.5} ${this.state.width / 2.2} ${this.state.svgHeight / 3 - 1}*/}
             {/*`} fill={this.bottomCurveColor()}/>*/}
-
           </Svg>
           <SafeAreaView style={{
             height: this.state.svgHeight / 3,
             width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexDirection: 'row'
           }}>
-            <Text style={{
-              fontFamily: Fonts.MEDIUM,
-              fontSize: 20,
-              color: 'white'
+            <View style={{
+              flex: 1
             }}>
-              Announcements
-            </Text>
+            </View>
+            <View style={{
+              flex: 2,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Text style={{
+                fontFamily: Fonts.MEDIUM,
+                fontSize: 20,
+                color: 'white'
+              }}>
+                Announcements
+              </Text>
+            </View>
+            <View style={{
+              flex: 1,
+              alignItems: 'flex-end',
+              justifyContent: 'center'
+            }}>
+              {this.renderPostButton()}
+            </View>
           </SafeAreaView>
           <View style={{
             flex: 12,
@@ -441,6 +467,34 @@ class AnnouncementScreen extends React.Component {
                 }}
             />
           </View>
+          <Modal style={{flex: 1}} isVisible={this.state.addIsVisible} onBackdropPress={() => {
+            this.setState({addIsVisible: !this.state.addIsVisible})
+          }}>
+            <View style={{
+              height: '50%',
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: 10
+            }}>
+              <View style={{
+                width: '100%',
+                alignItems: 'center',
+                margin: 8
+              }}>
+                <Text style={{
+                  fontFamily: Fonts.MEDIUM,
+                  fontWeight: '600',
+                  fontSize: 25
+                }}>
+                  New Post
+                </Text>
+              </View>
+              <View style={{
+                flex: 1
+              }}>
+              </View>
+            </View>
+          </Modal>
         </View>
     );
   }
