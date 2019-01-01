@@ -13,6 +13,7 @@ import firebase from 'react-native-firebase'
 import GoogleFit from 'react-native-google-fit'
 import AppleHealthKit from 'rn-apple-healthkit'
 import {GoogleSignin} from "react-native-google-signin";
+import moment from 'moment'
 
 class StepTrackerScreen extends React.Component {
   constructor(props) {
@@ -96,7 +97,30 @@ class StepTrackerScreen extends React.Component {
 
   updateStepCount(steps) {
     this.props.changeSteps(steps)
-    this.updateFirebaseData(2, this.props.userDetailsReducer.steps)
+    this.stepProcessor(steps).then((x) => {
+      if (x.error) {
+        alert('An error occurred')
+        return
+      }
+      if (x.value > 0) {
+        this.updateFirebaseData(x.value, steps)
+      }
+    })
+  }
+
+  stepProcessor(steps) {
+    return new Promise((resolve => {
+      var x = {error: false, value: 0}
+      if (steps < 8000) {
+        resolve(x)
+        return
+      }
+      if (!this.props.userDetailsReducer.date) {
+        this.props.changeRec(true)
+        x['value'] = 1
+      }
+      resolve(x)
+    }))
   }
 
   updateFirebaseData(points, steps) {
@@ -104,7 +128,7 @@ class StepTrackerScreen extends React.Component {
       const doc = await transaction.get(this.pedoRef)
       if (!doc.exists) {
         var j = []
-        j.push({total: steps, updateTime: new Date()})
+        j.push({total: steps, updateTime: new Date(), points})
         j.push({date: new Date().toDateString(), data: [{steps, points, time: new Date()}]})
         transaction.set(this.pedoRef, {data: j})
         return
@@ -121,6 +145,7 @@ class StepTrackerScreen extends React.Component {
               const oldSteps = res['data'][res['data'].length - 1].steps
               const updated = steps - oldSteps
               x[0].total += updated
+              x[0].points += points
               x[0].updateTime = new Date()
               res.data.push({steps, points, time: new Date()})
               return
@@ -132,6 +157,25 @@ class StepTrackerScreen extends React.Component {
         x.push({date: new Date().toDateString(), data: [{steps, points, time: new Date()}]})
       }
       transaction.update(this.pedoRef, {data: x})
+    })
+
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.pedoHouseRef)
+      if (!doc.exists) {
+        transaction.set(this.pedoHouseRef, {points, steps, updateTime: new Date()})
+        return {points, steps}
+      }
+      const x = Object.assign({}, doc.data())
+      if (moment(x.updateTime).week() != moment().week()) {
+        x['points'] = points
+        x['steps'] = steps
+        x['updateTime'] = new Date()
+      } else {
+        x['points'] += points
+        x['steps'] += steps
+        x['updateTime'] = new Date()
+      }
+      transaction.update(this.pedoHouseRef, x)
     })
   }
 

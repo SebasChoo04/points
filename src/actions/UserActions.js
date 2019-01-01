@@ -41,6 +41,13 @@ export function changeAllEggCount(count) {
   }
 }
 
+export function changeRec(date) {
+  return {
+    type: redux.USER_REC_STEP,
+    date
+  }
+}
+
 export function changeSteps(steps) {
   return {
     type: redux.USER_STEPS,

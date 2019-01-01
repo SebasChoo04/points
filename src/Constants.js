@@ -5,6 +5,7 @@ export const redux = {
   USER_LOGIN_STATUS: 'userloginstatus',
   USER_HOUSE: 'userhouse',
   USER_STEPS: 'usersteps',
+  USER_REC_STEP: 'userrecord',
   ALL_EGG: 'eggsebasdoesntknowabout',
 }
 
