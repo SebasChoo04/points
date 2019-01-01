@@ -54,3 +54,10 @@ export function changeSteps(steps) {
     steps
   }
 }
+
+export function changeAccess(access) {
+  return{
+    type: redux.USER_ACCESS,
+    access
+  }
+}

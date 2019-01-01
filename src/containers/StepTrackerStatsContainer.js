@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
 import StepTrackerScreen from "../components/StepTrackerScreen";
-import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll, changeSteps, changeRec} from "../actions";
+import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll, changeSteps, changeRec, changeAccess} from "../actions";
 import {connect} from 'react-redux'
 
 class StepTrackerStatsContainer extends Component {
@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetAll: () => dispatch(resetAll()),
   changeHouse: house => dispatch(changeHouse(house)),
   changeSteps: steps => dispatch(changeSteps(steps)),
-  changeRec: date => dispatch(changeRec(date))
+  changeRec: date => dispatch(changeRec(date)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StepTrackerStatsContainer)

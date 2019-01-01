@@ -5,7 +5,7 @@ import {GoogleSignin, GoogleSigninButton, statusCodes} from "react-native-google
 import * as Progress from 'react-native-progress';
 import firebase from 'react-native-firebase'
 import {StackActions, NavigationActions} from 'react-navigation'
-import {Fonts} from "../Constants";
+import {Fonts, access} from "../Constants";
 
 class Login extends Component {
   constructor(props) {
@@ -15,6 +15,7 @@ class Login extends Component {
       height: Dimensions.get('window').height,
       signInLoading: false
     }
+    this.flagRef = firebase.firestore().collection('users').doc('flag')
   }
 
   componentDidMount() {
@@ -84,12 +85,35 @@ class Login extends Component {
     )
   }
 
+  getAccess() {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.flagRef)
+      if (!doc.exists) {
+        transaction.set(this.flagRef, {house: [], superAdmin: []})
+        return
+      }
+      doc.data().house.forEach((x) => {
+        if (x == this.props.userDetailsReducer.email) {
+          this.props.changeAccess(access.house)
+          return
+        }
+      })
+      doc.data().superAdmin.forEach((x) => {
+        if (x == this.props.userDetailsReducer.email) {
+          this.props.changeAccess(access.superAdmin)
+          return
+        }
+      })
+    })
+  }
+
   async signIn() {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       this.props.changeName(userInfo.user.name)
       this.props.changeEmail(userInfo.user.email)
+      this.getAccess()
       this.getHouse()
     } catch (error) {
       this.setState({signInLoading: false})

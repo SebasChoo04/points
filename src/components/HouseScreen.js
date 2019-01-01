@@ -15,7 +15,7 @@ YellowBox.ignoreWarnings(['source.uri'])
 
 class HouseScreen extends Component {
   constructor(props) {
-      super(props)
+    super(props)
     this.state = {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
@@ -89,7 +89,7 @@ class HouseScreen extends Component {
       var arr = []
       Object.keys(houseInfo).forEach((x) => {
         var j = {}
-        var result = x.replace( /([A-Z])/g, " $1" );
+        var result = x.replace(/([A-Z])/g, " $1");
         var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
         j['key'] = finalResult
         j['data'] = houseInfo[x]

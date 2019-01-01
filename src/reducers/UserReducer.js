@@ -1,4 +1,4 @@
-import {redux} from "../Constants";
+import {redux, access} from "../Constants";
 
 const initialUserInfo = {
   name: "",
@@ -7,7 +7,8 @@ const initialUserInfo = {
   house: "",
   count: 0,
   steps: 0,
-  date: false
+  date: false,
+  access: access.student
 }
 
 export function userDetailsReducer(state = initialUserInfo, action) {
@@ -26,6 +27,8 @@ export function userDetailsReducer(state = initialUserInfo, action) {
       return Object.assign({}, state, {steps: action.steps})
     case redux.USER_REC_STEP:
       return Object.assign({}, state, {date: action.date})
+    case redux.USER_ACCESS:
+      return Object.assign({}, state, {access: action.access})
     default:
       return state
   }

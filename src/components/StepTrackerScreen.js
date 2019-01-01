@@ -90,7 +90,7 @@ class StepTrackerScreen extends React.Component {
         if (err) {
           throw err;
         }
-        this.setState({steps: res[0].steps[0].value})
+        this.updateStepCount(res[0].steps[0].value)
       });
     })
   }
@@ -346,7 +346,9 @@ class StepTrackerScreen extends React.Component {
                 fontFamily: Fonts.REGULAR,
                 fontSize: 30,
                 fontWeight: '400',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginLeft: 16,
+                marginRight: 16
               }}>
                 {this.message()}
               </Text>
