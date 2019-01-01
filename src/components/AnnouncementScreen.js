@@ -9,7 +9,6 @@ import {
   Animated,
   RefreshControl,
   Alert,
-  Image
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import Svg, {
@@ -22,7 +21,6 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Progress from "react-native-progress";
 import Markdown from 'react-native-simple-markdown'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import Modal from "react-native-modal";
 
 class AnnouncementScreen extends React.Component {
   constructor(props) {
@@ -48,7 +46,6 @@ class AnnouncementScreen extends React.Component {
       },
       houseRefreshing: false,
       allRefreshing: false,
-      addIsVisible: false
     }
     this.firebaseRef = firebase.firestore().collection('announcements').doc(this.props.userDetailsReducer.house.toLowerCase())
     this.firebaseRefAll = firebase.firestore().collection('announcements').doc('everyone')
@@ -85,7 +82,7 @@ class AnnouncementScreen extends React.Component {
       return (
           <TouchableOpacity style={{
             marginRight: 16
-          }} onPress={() => this.setState({addIsVisible: !this.state.addIsVisible})}>
+          }} onPress={() => this.props.navigation.navigate('addPostScreen', {index: this.state.navigationBar.index})}>
             <Icon name={'add'} color={'white'} size={25}/>
           </TouchableOpacity>
       )
@@ -467,34 +464,6 @@ class AnnouncementScreen extends React.Component {
                 }}
             />
           </View>
-          <Modal style={{flex: 1}} isVisible={this.state.addIsVisible} onBackdropPress={() => {
-            this.setState({addIsVisible: !this.state.addIsVisible})
-          }}>
-            <View style={{
-              height: '50%',
-              width: '100%',
-              backgroundColor: 'white',
-              borderRadius: 10
-            }}>
-              <View style={{
-                width: '100%',
-                alignItems: 'center',
-                margin: 8
-              }}>
-                <Text style={{
-                  fontFamily: Fonts.MEDIUM,
-                  fontWeight: '600',
-                  fontSize: 25
-                }}>
-                  New Post
-                </Text>
-              </View>
-              <View style={{
-                flex: 1
-              }}>
-              </View>
-            </View>
-          </Modal>
         </View>
     );
   }

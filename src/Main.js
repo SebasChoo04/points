@@ -9,6 +9,7 @@ import RankingContainer from "./containers/RankingContainer";
 import StepTrackerStatsContainer from "./containers/StepTrackerStatsContainer";
 import ChooseHouseContainer from "./containers/ChooseHouseContainer";
 import LoginContainer from "./containers/LoginContainer";
+import AddPostContainer from './containers/AddPostContainer'
 
 const TeacherTabNavigator = createBottomTabNavigator({
   "House": {screen: HouseContainer},
@@ -77,7 +78,8 @@ const Main = createStackNavigator({
   ChooseHouse: {screen: ChooseHouseContainer},
   Login: {screen: LoginContainer},
   Tab: {screen: TabNavigator},
-  TeacherTab: {screen: TeacherTabNavigator}
+  TeacherTab: {screen: TeacherTabNavigator},
+  addPostScreen: {screen: AddPostContainer}
 }, {
   headerMode: 'none'
 });
