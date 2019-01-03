@@ -347,8 +347,6 @@ class StepTrackerScreen extends React.Component {
                 fontSize: 30,
                 fontWeight: '400',
                 textAlign: 'center',
-                marginLeft: 16,
-                marginRight: 16
               }}>
                 {this.message()}
               </Text>

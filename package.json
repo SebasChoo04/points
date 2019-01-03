@@ -22,6 +22,7 @@
     "react-native-google-fit": "^0.7.1",
     "react-native-google-signin": "^1.0.2",
     "react-native-image-progress": "^1.1.1",
+    "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-linear-gradient": "^2.5.3",
     "react-native-material-textfield": "^0.12.0",
     "react-native-modal": "^7.0.2",

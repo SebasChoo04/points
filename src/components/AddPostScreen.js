@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Dimensions, TouchableOpacity, SafeAreaView} from 'react-native'
+import {View, Text, Dimensions, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native'
 import Svg, {
   Path,
   LinearGradient,
@@ -8,6 +8,8 @@ import Svg, {
 import firebase from "react-native-firebase";
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Fonts} from "../Constants";
+import {TextField} from 'react-native-material-textfield'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 class AddPostScreen extends Component {
   constructor(props) {
@@ -16,6 +18,8 @@ class AddPostScreen extends Component {
       width: Dimensions.get('window').width,
       svgHeight: Dimensions.get('window').height / 3,
       height: Dimensions.get('window').height,
+      title: "",
+      content: ""
     }
   }
 
@@ -30,7 +34,9 @@ class AddPostScreen extends Component {
 
   render() {
     return (
-        <View>
+        <View style={{
+          flex: 1
+        }}>
           <Svg style={{
             position: 'absolute',
             height: this.state.height,
@@ -118,6 +124,23 @@ class AddPostScreen extends Component {
               </TouchableOpacity>
             </View>
           </SafeAreaView>
+          <View style={{
+            flex: 1,
+            margin: 8
+          }}>
+            <KeyboardAwareScrollView>
+              <TextField label={'Title'} onChangeText={(text) => {
+                this.setState({title: text})
+              }}/>
+              <TextField label={'Content'} multiline={true} onChangeText={(text) => {
+                const x = text.replace(/\r?\n/g, "<br/>");
+                this.setState({content: x})
+              }}/>
+            </KeyboardAwareScrollView>
+            <Text>
+              {JSON.stringify(this.state.content)}
+            </Text>
+          </View>
         </View>
     )
   }
