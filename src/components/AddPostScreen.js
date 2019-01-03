@@ -32,7 +32,6 @@ class AddPostScreen extends Component {
 
   pushFirebase() {
     if (this.props.navigation.getParam('index') == 0) {
-      alert('house')
       firebase.firestore().runTransaction(async transaction => {
         const doc = await transaction.get(this.houseRef)
         if (!doc.exists) {
@@ -42,10 +41,12 @@ class AddPostScreen extends Component {
         const x = doc.data().announcement.slice(0)
         x.push({content: this.state.content, title: this.state.title})
         transaction.update(this.houseRef, {announcement: x})
+        this.setState({previewVisible: false}, () => {
+          this.props.navigation.goBack()
+        })
         return
       })
     } else if (this.props.navigation.getParam('index') == 1) {
-      alert('all')
       firebase.firestore().runTransaction(async transaction => {
         const doc = await transaction.get(this.allRef)
         if (!doc.exists) {
