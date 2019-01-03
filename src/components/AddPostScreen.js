@@ -10,6 +10,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Fonts} from "../Constants";
 import {TextField} from 'react-native-material-textfield'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import Modal from 'react-native-modal'
+import Markdown from "react-native-simple-markdown";
 
 class AddPostScreen extends Component {
   constructor(props) {
@@ -19,17 +21,67 @@ class AddPostScreen extends Component {
       svgHeight: Dimensions.get('window').height / 3,
       height: Dimensions.get('window').height,
       title: "",
-      content: ""
+      content: "",
+      previewVisible: false,
+      contentError: "",
+      titleError: ""
+    }
+    this.houseRef = firebase.firestore().collection('announcements').doc(this.props.userDetailsReducer.house.toLowerCase())
+    this.allRef = firebase.firestore().collection('announcements').doc('everyone')
+  }
+
+  pushFirebase() {
+    if (this.props.navigation.getParam('index') == 0) {
+      alert('house')
+      firebase.firestore().runTransaction(async transaction => {
+        const doc = await transaction.get(this.houseRef)
+        if (!doc.exists) {
+          transaction.set(this.houseRef, {announcement: [{content: this.state.content, title: this.state.title}]})
+          return
+        }
+        const x = doc.data().announcement.slice(0)
+        x.push({content: this.state.content, title: this.state.title})
+        transaction.update(this.houseRef, {announcement: x})
+        return
+      })
+    } else if (this.props.navigation.getParam('index') == 1) {
+      alert('all')
+      firebase.firestore().runTransaction(async transaction => {
+        const doc = await transaction.get(this.allRef)
+        if (!doc.exists) {
+          transaction.set(this.allRef, {announcement: [{content: this.state.content, title: this.state.title}]})
+          this.setState({previewVisible: false}, () => {
+            this.props.navigation.goBack()
+          })
+          return
+        }
+        const x = doc.data().announcement.slice(0)
+        x.push({content: this.state.content, title: this.state.title})
+        transaction.update(this.allRef, {announcement: x})
+        this.setState({previewVisible: false}, () => {
+          this.props.navigation.goBack()
+        })
+        return
+      })
+    } else {
+      alert('An error occurred')
     }
   }
 
   componentDidMount() {
-    alert(this.props.navigation.getParam('index'))
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       const modHeight = height / 3
       this.setState({width, svgHeight: modHeight, height});
     })
+  }
+
+  processedContent() {
+    String.prototype.replaceAll = function (str1, str2, ignore) {
+      return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
+    }
+    const x = this.state.content.replaceAll("<br/>", `\n`)
+    return x
   }
 
   render() {
@@ -118,7 +170,18 @@ class AddPostScreen extends Component {
               <TouchableOpacity style={{
                 marginRight: 16
               }} onPress={() => {
-                this.props.navigation.goBack()
+                var x = false
+                if (this.state.title.length < 1) {
+                  x = true
+                  this.setState({titleError: 'Title cannot be empty'})
+                }
+                if (this.state.content.length < 1) {
+                  x = true
+                  this.setState({contentError: 'Content cannot be empty'})
+                }
+                if (!x) {
+                  this.setState({previewVisible: true})
+                }
               }}>
                 <Icon name={'send'} color={'white'} size={25}/>
               </TouchableOpacity>
@@ -129,18 +192,69 @@ class AddPostScreen extends Component {
             margin: 8
           }}>
             <KeyboardAwareScrollView>
-              <TextField label={'Title'} onChangeText={(text) => {
+              <TextField error={this.state.titleError} label={'Title'} onChangeText={(text) => {
+                this.setState({titleError: ""})
                 this.setState({title: text})
               }}/>
-              <TextField label={'Content'} multiline={true} onChangeText={(text) => {
+              <TextField error={this.state.contentError} label={'Content'} multiline={true} onChangeText={(text) => {
+                this.setState({contentError: ""})
                 const x = text.replace(/\r?\n/g, "<br/>");
                 this.setState({content: x})
               }}/>
             </KeyboardAwareScrollView>
-            <Text>
-              {JSON.stringify(this.state.content)}
-            </Text>
           </View>
+          <Modal isVisible={this.state.previewVisible} style={{
+            flex: 1,
+          }} onBackdropPress={() => {
+            this.setState({previewVisible: !this.state.previewVisible})
+          }}>
+            <View style={{
+              width: '100%',
+              backgroundColor: 'white',
+              borderRadius: 10,
+              padding: 16
+            }}>
+              <Text style={{
+                fontFamily: Fonts.MEDIUM,
+                fontWeight: '500',
+                fontSize: 20,
+              }}>
+                {this.state.title}
+              </Text>
+              <Markdown styles={{
+                text: {
+                  color: 'black',
+                  fontFamily: Fonts.REGULAR
+                },
+                heading1: {
+                  color: 'black',
+                  fontFamily: Fonts.MEDIUM,
+                  fontSize: 25,
+                  fontWeight: '600'
+                },
+                strong: {
+                  fontWeight: 'bold',
+                  fontFamily: Fonts.REGULAR,
+                },
+                heading2: {
+                  color: 'black',
+                  fontFamily: Fonts.MEDIUM,
+                  fontSize: 20,
+                  fontWeight: '600'
+                }
+              }}>
+                {this.processedContent()}
+              </Markdown>
+            </View>
+            <TouchableOpacity style={{
+              margin: 8,
+              alignSelf: 'center'
+            }} onPress={() => {
+              this.pushFirebase()
+            }}>
+              <Icon name={'done'} color={'white'} size={30}/>
+            </TouchableOpacity>
+          </Modal>
         </View>
     )
   }
