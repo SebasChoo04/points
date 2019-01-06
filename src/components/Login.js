@@ -41,6 +41,7 @@ class Login extends Component {
   }
 
   getHouse() {
+    //TODO - route to different tabs for teacher
     const ref = firebase.firestore().collection('users').doc(this.props.userDetailsReducer.email)
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(ref)

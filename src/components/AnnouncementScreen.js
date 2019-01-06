@@ -194,6 +194,23 @@ class AnnouncementScreen extends React.Component {
     )
   }
 
+  renderEditButton() {
+    // TODO - work on this
+    // if (this.props.userDetailsReducer.access != access.student) {
+    //   return (
+    //       <TouchableOpacity style={{
+    //         marginRight: 16
+    //       }} onPress={() => this.props.navigation.navigate('addPostScreen', {index: this.state.navigationBar.index})}>
+    //         <Text style={{
+    //           fontFamily: Fonts.MEDIUM
+    //         }}>
+    //           Edit
+    //         </Text>
+    //       </TouchableOpacity>
+    //   )
+    // }
+  }
+
   allAnnouncements() {
     if (this.state.allLoading) {
       return (
@@ -318,6 +335,7 @@ class AnnouncementScreen extends React.Component {
             <View style={{
               flex: 1
             }}>
+              {this.renderEditButton()}
             </View>
             <View style={{
               flex: 2,

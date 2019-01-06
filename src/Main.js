@@ -11,36 +11,36 @@ import ChooseHouseContainer from "./containers/ChooseHouseContainer";
 import LoginContainer from "./containers/LoginContainer";
 import AddPostContainer from './containers/AddPostContainer'
 
-// const TeacherTabNavigator = createBottomTabNavigator({
-//   "House": {screen: HouseContainer},
-//   "Announcements": {screen: AnnouncementContainer},
-//   "Rankings": {screen: RankingContainer},
-//   "Statistics": {screen: StepTrackerStatsContainer}
-// }, {
-//   defaultNavigationOptions: ({navigation}) => ({
-//     tabBarIcon: () => {
-//       const {routeName} = navigation.state
-//       switch (routeName) {
-//         case 'House':
-//           return(
-//               <Icon name={"home"} size={25}/>
-//           );
-//         case 'Announcements':
-//           return(
-//               <Icon name={"announcement"} size={25}/>
-//           );
-//         case "Rankings":
-//           return(
-//               <Icon2 name={"trophy"} size={25}/>
-//           );
-//         case "Steps":
-//           return(
-//               <Icon name={"directions-walk"} size={25}/>
-//           )
-//       }
-//     }
-//   }),
-// })
+const TeacherTabNavigator = createBottomTabNavigator({
+  "House": {screen: HouseContainer},
+  "Announcements": {screen: AnnouncementContainer},
+  "Rankings": {screen: RankingContainer},
+  "Statistics": {screen: StepTrackerStatsContainer}
+}, {
+  defaultNavigationOptions: ({navigation}) => ({
+    tabBarIcon: () => {
+      const {routeName} = navigation.state
+      switch (routeName) {
+        case 'House':
+          return(
+              <Icon name={"home"} size={25}/>
+          );
+        case 'Announcements':
+          return(
+              <Icon name={"announcement"} size={25}/>
+          );
+        case "Rankings":
+          return(
+              <Icon2 name={"trophy"} size={25}/>
+          );
+        case "Steps":
+          return(
+              <Icon name={"directions-walk"} size={25}/>
+          )
+      }
+    }
+  }),
+})
 
 const TabNavigator = createBottomTabNavigator({
   "House": {screen: HouseContainer},
@@ -78,7 +78,7 @@ const Main = createStackNavigator({
   ChooseHouse: {screen: ChooseHouseContainer},
   Login: {screen: LoginContainer},
   Tab: {screen: TabNavigator},
-  // TeacherTab: {screen: TeacherTabNavigator},
+  TeacherTab: {screen: TeacherTabNavigator},
   addPostScreen: {screen: AddPostContainer}
 }, {
   headerMode: 'none'

@@ -4,6 +4,8 @@ import StepTrackerScreen from "../components/StepTrackerScreen";
 import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll, changeSteps, changeRec, changeAccess} from "../actions";
 import {connect} from 'react-redux'
 
+//TODO - if else with props to determine screen to go to
+
 class StepTrackerStatsContainer extends Component {
   render() {
     return (

@@ -15,6 +15,8 @@ import AppleHealthKit from 'rn-apple-healthkit'
 import {GoogleSignin} from "react-native-google-signin";
 import moment from 'moment'
 
+// TODO - link to firebase, should be easy, points contributed
+
 class StepTrackerScreen extends React.Component {
   constructor(props) {
     super(props);
