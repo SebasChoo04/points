@@ -77,7 +77,7 @@ class HouseScreen extends Component {
     )
   }
 
-  getFirebaseData() {
+  async getFirebaseData() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRef)
       if (!doc.exists) {

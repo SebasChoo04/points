@@ -54,6 +54,12 @@ class AnnouncementScreen extends React.Component {
   componentDidMount() {
     this.getFirebaseData()
     this.getFirebaseDataAll()
+    this.firebaseRef.onSnapshot(() => {
+      this.getFirebaseData()
+    })
+    this.firebaseRefAll.onSnapshot(() => {
+      this.getFirebaseDataAll()
+    })
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
       const modHeight = height / 3
@@ -61,7 +67,7 @@ class AnnouncementScreen extends React.Component {
     })
   }
 
-  getFirebaseData() {
+  async getFirebaseData() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRef)
       if (!doc.exists) {
@@ -89,7 +95,7 @@ class AnnouncementScreen extends React.Component {
     }
   }
 
-  getFirebaseDataAll() {
+  async getFirebaseDataAll() {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.firebaseRefAll)
       if (!doc.exists) {
@@ -133,68 +139,58 @@ class AnnouncementScreen extends React.Component {
       )
     }
     return (
-        <View style={{
-          flex: 1
-        }}>
-          <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()}
-                    style={{
-                      flex: 1,
-                    }}
-                    refreshControl={
-                      <RefreshControl
-                          refreshing={this.state.houseRefreshing}
-                          onRefresh={this.getFirebaseData()}
-                      />
+        <FlatList data={this.state.Announcements} keyExtractor={(item, index) => index.toString()}
+                  style={{
+                    flex: 1,
+                  }}
+                  renderItem={({item}) => {
+                    String.prototype.replaceAll = function (str1, str2, ignore) {
+                      return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
                     }
-                    renderItem={({item}) => {
-                      String.prototype.replaceAll = function (str1, str2, ignore) {
-                        return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
-                      }
-                      const x = item.content.replaceAll("<br/>", `\n`)
-                      return (
-                          <View style={{
-                            backgroundColor: this.tabBarColor(),
-                            width: this.state.width - 32,
-                            alignSelf: 'center',
-                            padding: 16,
-                            marginTop: 16,
-                            borderRadius: 5
+                    const x = item.content.replaceAll("<br/>", `\n`)
+                    return (
+                        <View style={{
+                          backgroundColor: this.tabBarColor(),
+                          width: this.state.width - 32,
+                          alignSelf: 'center',
+                          padding: 16,
+                          marginTop: 16,
+                          borderRadius: 5
+                        }}>
+                          <Text style={{
+                            color: 'white',
+                            fontFamily: Fonts.MEDIUM,
+                            fontSize: 20
                           }}>
-                            <Text style={{
+                            {item.title}
+                          </Text>
+                          <Markdown styles={{
+                            text: {
+                              color: 'white',
+                              fontFamily: Fonts.REGULAR
+                            },
+                            heading1: {
                               color: 'white',
                               fontFamily: Fonts.MEDIUM,
-                              fontSize: 20
-                            }}>
-                              {item.title}
-                            </Text>
-                            <Markdown styles={{
-                              text: {
-                                color: 'white',
-                                fontFamily: Fonts.REGULAR
-                              },
-                              heading1: {
-                                color: 'white',
-                                fontFamily: Fonts.MEDIUM,
-                                fontSize: 25,
-                                fontWeight: '600'
-                              },
-                              strong: {
-                                fontWeight: 'bold',
-                                fontFamily: Fonts.REGULAR,
-                              },
-                              heading2: {
-                                color: 'white',
-                                fontFamily: Fonts.MEDIUM,
-                                fontSize: 20,
-                                fontWeight: '600'
-                              }
-                            }}>
-                              {x}
-                            </Markdown>
-                          </View>
-                      )
-                    }}/>
-        </View>
+                              fontSize: 25,
+                              fontWeight: '600'
+                            },
+                            strong: {
+                              fontWeight: 'bold',
+                              fontFamily: Fonts.REGULAR,
+                            },
+                            heading2: {
+                              color: 'white',
+                              fontFamily: Fonts.MEDIUM,
+                              fontSize: 20,
+                              fontWeight: '600'
+                            }
+                          }}>
+                            {x}
+                          </Markdown>
+                        </View>
+                    )
+                  }}/>
     )
   }
 
@@ -211,68 +207,58 @@ class AnnouncementScreen extends React.Component {
       )
     }
     return (
-        <View style={{
-          flex: 1
-        }}>
-          <FlatList data={this.state.AnnouncementsAll} keyExtractor={(item, index) => index.toString()}
-                    style={{
-                      flex: 1,
-                    }}
-                    refreshControl={
-                      <RefreshControl
-                          refreshing={this.state.allRefreshing}
-                          onRefresh={this.getFirebaseDataAll()}
-                      />
+        <FlatList data={this.state.AnnouncementsAll} keyExtractor={(item, index) => index.toString()}
+                  style={{
+                    flex: 1,
+                  }}
+                  renderItem={({item}) => {
+                    String.prototype.replaceAll = function (str1, str2, ignore) {
+                      return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
                     }
-                    renderItem={({item}) => {
-                      String.prototype.replaceAll = function (str1, str2, ignore) {
-                        return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
-                      }
-                      const x = item.content.replaceAll("<br/>", `\n`)
-                      return (
-                          <View style={{
-                            backgroundColor: this.tabBarColor(),
-                            width: this.state.width - 32,
-                            alignSelf: 'center',
-                            padding: 16,
-                            marginTop: 16,
-                            borderRadius: 5
+                    const x = item.content.replaceAll("<br/>", `\n`)
+                    return (
+                        <View style={{
+                          backgroundColor: this.tabBarColor(),
+                          width: this.state.width - 32,
+                          alignSelf: 'center',
+                          padding: 16,
+                          marginTop: 16,
+                          borderRadius: 5
+                        }}>
+                          <Text style={{
+                            color: 'white',
+                            fontFamily: Fonts.MEDIUM,
+                            fontSize: 20
                           }}>
-                            <Text style={{
+                            {item.title}
+                          </Text>
+                          <Markdown styles={{
+                            text: {
+                              color: 'white',
+                              fontFamily: Fonts.REGULAR
+                            },
+                            heading1: {
                               color: 'white',
                               fontFamily: Fonts.MEDIUM,
-                              fontSize: 20
-                            }}>
-                              {item.title}
-                            </Text>
-                            <Markdown styles={{
-                              text: {
-                                color: 'white',
-                                fontFamily: Fonts.REGULAR
-                              },
-                              heading1: {
-                                color: 'white',
-                                fontFamily: Fonts.MEDIUM,
-                                fontSize: 25,
-                                fontWeight: '600'
-                              },
-                              strong: {
-                                fontWeight: 'bold',
-                                fontFamily: Fonts.REGULAR,
-                              },
-                              heading2: {
-                                color: 'white',
-                                fontFamily: Fonts.MEDIUM,
-                                fontSize: 20,
-                                fontWeight: '600'
-                              },
-                            }}>
-                              {x}
-                            </Markdown>
-                          </View>
-                      )
-                    }}/>
-        </View>
+                              fontSize: 25,
+                              fontWeight: '600'
+                            },
+                            strong: {
+                              fontWeight: 'bold',
+                              fontFamily: Fonts.REGULAR,
+                            },
+                            heading2: {
+                              color: 'white',
+                              fontFamily: Fonts.MEDIUM,
+                              fontSize: 20,
+                              fontWeight: '600'
+                            },
+                          }}>
+                            {x}
+                          </Markdown>
+                        </View>
+                    )
+                  }}/>
     )
   }
 
@@ -376,7 +362,8 @@ class AnnouncementScreen extends React.Component {
                       House: () => {
                         return (
                             <View style={{
-                              flex: 1
+                              height: '100%',
+                              width: '100%'
                             }}>
                               {this.houseAnnouncements()}
                             </View>
@@ -385,7 +372,8 @@ class AnnouncementScreen extends React.Component {
                       All: () => {
                         return (
                             <View style={{
-                              flex: 1
+                              height: '100%',
+                              width: '100%'
                             }}>
                               {this.allAnnouncements()}
                             </View>

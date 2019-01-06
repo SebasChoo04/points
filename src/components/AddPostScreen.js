@@ -30,7 +30,7 @@ class AddPostScreen extends Component {
     this.allRef = firebase.firestore().collection('announcements').doc('everyone')
   }
 
-  pushFirebase() {
+  async pushFirebase() {
     if (this.props.navigation.getParam('index') == 0) {
       firebase.firestore().runTransaction(async transaction => {
         const doc = await transaction.get(this.houseRef)
