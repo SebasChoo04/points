@@ -105,7 +105,7 @@ class RankingScreen extends React.Component {
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(this.ref)
       if (!doc.exists){
-      transaction.set(this.ref, {Error: "Invalid doc in AnnouncementScreen.js"})
+      transaction.set(this.ref, {Error: "Invalid doc in RankingScreen.js"})
       alert("An error has occurred, please contact Sebastian Choo")
       return {}
       }

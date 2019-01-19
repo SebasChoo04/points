@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Dimensions} from 'react-native';
-import {SafeAreaView, Text, TouchableOpacity, Platform, NativeAppEventEmitter} from 'react-native'
+import {SafeAreaView, Text, TouchableOpacity, Platform, NativeAppEventEmitter, View, Dimensions} from 'react-native'
 import {NavigationActions, StackActions} from "react-navigation";
 import {AnimatedCircularProgress} from 'react-native-circular-progress'
 import Svg, {
@@ -24,6 +23,7 @@ class StepTrackerScreen extends React.Component {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
+      stepsRequirement: 8000,
     }
     this.pedoRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.email)
     this.pedoHouseRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.house.toLowerCase())
@@ -113,7 +113,7 @@ class StepTrackerScreen extends React.Component {
   stepProcessor(steps) {
     return new Promise((resolve => {
       var x = {error: false, value: 0}
-      if (steps < 8000) {
+      if (steps < this.state.stepsRequirement) {
         resolve(x)
         return
       }
@@ -237,10 +237,10 @@ class StepTrackerScreen extends React.Component {
   }
 
   message() {
-    if (this.props.userDetailsReducer.steps < 10000) {
-      return `You are ${10000 - this.props.userDetailsReducer.steps} steps away from earning one point.`
+    if (this.props.userDetailsReducer.steps < this.state.stepsRequirement) {
+      return `You are ${this.state.stepsRequirement - this.props.userDetailsReducer.steps} steps away from earning one point.`
     }
-    return `You have accomplished the 10000 daily step count.`
+    return `You have accomplished the ${this.state.stepsRequirement} daily step count.`
   }
 
   componentWillUnmount(): void {
@@ -323,7 +323,7 @@ class StepTrackerScreen extends React.Component {
                   size={250}
                   width={20}
                   backgroundWidth={10}
-                  fill={this.props.userDetailsReducer.steps / 100}
+                  fill={this.props.userDetailsReducer.steps / (this.state.stepsRequirement /100)}
                   tintColor={this.color()}
                   backgroundColor={this.backgroundColor()}
                   arcSweepAngle={240}

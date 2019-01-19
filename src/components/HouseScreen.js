@@ -50,10 +50,11 @@ class HouseScreen extends Component {
     }
     return (
         <FlatList
-            data={this.state.listData} style={{
-          flex: 1,
-          marginTop: 50
-        }} renderItem={({item}) => {
+            data={this.state.listData}
+            style={{
+              flex: 1,
+              marginTop: 50}}
+            renderItem={({item}) => {
           return (
               <View style={{
                 marginBottom: 16,
