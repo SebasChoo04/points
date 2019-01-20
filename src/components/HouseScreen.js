@@ -95,6 +95,7 @@ class HouseScreen extends Component {
         j['key'] = finalResult
         j['data'] = houseInfo[x]
         arr.push(j)
+        arr.sort((a,b) => a['key'].localeCompare(b['key']))
       })
       this.setState({listData: arr}, () => {
         this.setState({loading: false})

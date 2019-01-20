@@ -94,13 +94,13 @@ class Login extends Component {
         return
       }
       doc.data().house.forEach((x) => {
-        if (x == this.props.userDetailsReducer.email) {
+        if (x === this.props.userDetailsReducer.email) {
           this.props.changeAccess(access.house)
           return
         }
       })
       doc.data().superAdmin.forEach((x) => {
-        if (x == this.props.userDetailsReducer.email) {
+        if (x === this.props.userDetailsReducer.email) {
           this.props.changeAccess(access.superAdmin)
           return
         }

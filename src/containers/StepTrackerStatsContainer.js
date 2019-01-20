@@ -5,12 +5,9 @@ import {changeEmail, changeHouse, changeLoginStatus, changeName, resetAll, chang
 import {connect} from 'react-redux'
 import {access} from "../Constants";
 import StepAnalytics from "../components/StepAnalytics";
-
-//TODO - if else with props to determine screen to go to
-
 class StepTrackerStatsContainer extends Component {
   checkAccessLevel(){
-    if (this.props.userDetailsReducer.access === access.student) {
+    if (this.props.userDetailsReducer.access !== access.superAdmin) {
       return <StepTrackerScreen {...this.props}/>
     } else {
       return <StepAnalytics {...this.props}/>

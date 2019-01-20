@@ -7,7 +7,7 @@ import Svg, {
 } from "react-native-svg";
 import firebase from "react-native-firebase";
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import {Fonts} from "../Constants";
+import {access, Fonts} from "../Constants";
 import {TextField} from 'react-native-material-textfield'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Modal from 'react-native-modal'
@@ -31,7 +31,7 @@ class AddPostScreen extends Component {
   }
 
   async pushFirebase() {
-    if (this.props.navigation.getParam('index') == 0) {
+    if (this.props.navigation.getParam('index') === 0) {
       firebase.firestore().runTransaction(async transaction => {
         const doc = await transaction.get(this.houseRef)
         if (!doc.exists) {
@@ -44,9 +44,8 @@ class AddPostScreen extends Component {
         this.setState({previewVisible: false}, () => {
           this.props.navigation.goBack()
         })
-        return
       })
-    } else if (this.props.navigation.getParam('index') == 1) {
+    } else if (this.props.navigation.getParam('index') === 1 && this.props.userDetailsReducer.access === access.superAdmin) {
       firebase.firestore().runTransaction(async transaction => {
         const doc = await transaction.get(this.allRef)
         if (!doc.exists) {
