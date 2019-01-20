@@ -90,11 +90,17 @@ class AnnouncementScreen extends React.Component {
         </TouchableOpacity>
       )
     }
-    else if (this.props.userDetailsReducer.access === access.house && this.props.navigation.getParam('index') === 1) {
+    else if (this.props.userDetailsReducer.access === access.house && this.state.navigationBar.index === 0) {
       return (
-       <View>
-       </View>
+        <TouchableOpacity style={{
+          marginRight: 16
+        }} onPress={() => this.props.navigation.navigate('addPostScreen', {index: this.state.navigationBar.index})}>
+          <Icon name={'add'} color={'white'} size={25}/>
+        </TouchableOpacity>
       )
+    }
+    else{
+      alert('gae')
     }
   }
   
@@ -281,7 +287,6 @@ class AnnouncementScreen extends React.Component {
                 }}/>
     )
   }
-  
   render() {
     return (
       <View style={{
@@ -321,14 +326,6 @@ class AnnouncementScreen extends React.Component {
               L${this.state.width} 0
               L0 ${this.state.svgHeight / 3}
             `} fill={`url(#${this.props.userDetailsReducer.house.toLowerCase()})`}/>
-          {/*<Path d={`*/}
-          {/*M-5 ${this.state.svgHeight / 3 + 1}*/}
-          {/*C${this.state.width / 3} ${this.state.svgHeight / 4} ${this.state.width / 2} ${this.state.svgHeight / 2.5} ${this.state.width} ${this.state.svgHeight / 3 + 1}*/}
-          {/*`} fill={'white'}/>*/}
-          {/*<Path d={`*/}
-          {/*M${this.state.width + 5} ${this.state.svgHeight / 3 - 1}*/}
-          {/*S${this.state.width / 100 * 80} ${this.state.svgHeight / 2.5} ${this.state.width / 2.2} ${this.state.svgHeight / 3 - 1}*/}
-          {/*`} fill={this.bottomCurveColor()}/>*/}
         </Svg>
         <SafeAreaView style={{
           height: this.state.svgHeight / 3,
