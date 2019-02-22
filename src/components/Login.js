@@ -36,12 +36,11 @@ class Login extends Component {
     this.signIn()
   }
 
-  showError(error) {
+  static showError(error) {
     alert(error)
   }
 
   getHouse() {
-    //TODO - route to different tabs for teacher
     const ref = firebase.firestore().collection('users').doc(this.props.userDetailsReducer.email)
     firebase.firestore().runTransaction(async transaction => {
       const doc = await transaction.get(ref)
@@ -62,7 +61,6 @@ class Login extends Component {
         });
         this.props.navigation.dispatch(resetAction);
       }
-      return
     })
   }
 
@@ -110,18 +108,23 @@ class Login extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      this.props.changeName(userInfo.user.name)
-      this.props.changeEmail(userInfo.user.email)
-      this.getAccess()
-      this.getHouse()
+      let testEmail = userInfo.user.email.toLowerCase()
+      if (testEmail.includes("@s2016.sst.edu.sg") || testEmail.includes("@s2017.sst.edu.sg")||testEmail.includes("@s2018.ssts.edu.sg")||testEmail.includes("@s2019.ssts.edu.sg")) {
+        this.props.changeName(userInfo.user.name)
+        this.props.changeEmail(userInfo.user.email)
+        this.getAccess()
+        this.getHouse()
+      } else {
+        alert("Apologies this app is for SST Members Only. Please use your SST email account. ")
+      }
     } catch (error) {
       this.setState({signInLoading: false})
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        this.showError("User cancelled signin")
+        Login.showError("User cancelled signin")
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        this.showError('Play services not available')
+        Login.showError('Play services not available')
       } else {
-        this.showError('An error occurred')
+        Login.showError('An error occurred')
         console.log(error)
       }
     }

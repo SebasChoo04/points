@@ -14,8 +14,6 @@ import AppleHealthKit from 'rn-apple-healthkit'
 import {GoogleSignin} from "react-native-google-signin";
 import moment from 'moment'
 
-// TODO - link to firebase, should be easy, points contributed
-
 class StepTrackerScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +22,8 @@ class StepTrackerScreen extends React.Component {
       height: Dimensions.get('window').height,
       svgHeight: Dimensions.get('window').height / 3,
       stepsRequirement: 8000,
+      pointsContribution: 0,
+      pointsHouse: 0
     }
     this.pedoRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.email)
     this.pedoHouseRef = firebase.firestore().collection('pedometer').doc(this.props.userDetailsReducer.house.toLowerCase())
@@ -83,10 +83,6 @@ class StepTrackerScreen extends React.Component {
       startDate: start.toISOString(),
       endDate: end.toISOString()
     };
-    GoogleFit.authorize()
-    GoogleFit.onAuthorizeFailure(() => {
-      alert('An error occurred')
-    })
     GoogleFit.onAuthorize(() => {
       GoogleFit.getDailyStepCountSamples(options, (err, res) => {
         if (err) {
@@ -95,6 +91,10 @@ class StepTrackerScreen extends React.Component {
         this.updateStepCount(res[0].steps[0].value)
       });
     })
+    GoogleFit.onAuthorizeFailure(() => {
+      alert('An error occurred')
+    })
+    GoogleFit.authorize()
   }
 
   async updateStepCount(steps) {
@@ -222,7 +222,33 @@ class StepTrackerScreen extends React.Component {
       this.setState({steps: results.value})
     });
   }
-
+  pointsContribution() {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.pedoRef)
+      if (!doc.exists){
+        transaction.set(this.pedoRef, {Error: "Invalid doc in StepTrackerScreen.js"})
+        alert("An error has occurred, please contact Sebastian Choo")
+        return {}
+      }
+      let x = doc.data().data
+      let data = x[0].points
+      this.setState({pointsContribution: data})
+      transaction.update(this.pedoRef, doc.data())
+    })
+  }
+  houseContribution() {
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(this.pedoHouseRef)
+      if (!doc.exists){
+        transaction.set(this.pedoHouseRef, {Error: "Invalid doc in StepTrackerScreen.js"})
+        alert("An error has occurred, please contact Sebastian Choo")
+        return {}
+      }
+      let x = doc.data().points
+      this.setState({pointsHouse: data})
+      transaction.update(this.pedoHouseRef, doc.data())
+    })
+  }
   componentDidMount() {
     Dimensions.addEventListener('change', (e) => {
       const {width, height} = e.window;
@@ -234,9 +260,10 @@ class StepTrackerScreen extends React.Component {
     } else {
       this.googleFit()
     }
+    this.houseContribution()
+    this.pointsContribution()
   }
-
-  message() {
+  message(){
     if (this.props.userDetailsReducer.steps < this.state.stepsRequirement) {
       return `You are ${this.state.stepsRequirement - this.props.userDetailsReducer.steps} steps away from earning one point.`
     }
@@ -250,7 +277,6 @@ class StepTrackerScreen extends React.Component {
     }
     GoogleFit.removeListeners()
   }
-
   render() {
     return (
         <View style={{flex: 1}}>
@@ -358,8 +384,8 @@ class StepTrackerScreen extends React.Component {
                 textAlign: 'center',
                 marginTop: 30,
               }}>
-                Points contributed so far: 100 {"\n"}
-                Points gained by House: 10
+                Points contributed so far: {this.state.pointsContribution} {"\n"}
+                Points gained by House: {this.state.pointsHouse}
               </Text>
               <TouchableOpacity
                   style={{
